@@ -1,6 +1,6 @@
 # Notes meeting 1  
 The project is creating an end-to-end encryption chat app for iOS devices.  
-The Trello board can be found [here](https://trello.com/b/dzuUnoZi/1st-sprint-planning)  
+The Trello board can be found [here](https://trello.com/b/54TKPcGT/ecs189e-project)  
 
 Notes:  
 * Phone number used to sign up to ensure legitimacy of users  

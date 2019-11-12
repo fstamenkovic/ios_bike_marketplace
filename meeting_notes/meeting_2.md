@@ -40,6 +40,8 @@ an anonymized Google Forms.
 
 # UI proposal
 Vselovod came up with a proposal of what each ViewController should look like.
+07:56pm: I added a PDF containing the view mockup to the repo.
+The mockup can be found [here](https://github.com/ECS189E/project-f19-tigers/blob/master/meeting_notes/view-mockup.pdf).
 
 
 Meeting ended at 12:45pm. Here is the [link](https://trello.com/b/54TKPcGT/ecs189e-project) to Trello.

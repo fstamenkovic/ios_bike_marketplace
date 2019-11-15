@@ -14,6 +14,13 @@
 		5904BF53237A511D007EE8E3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5904BF52237A511D007EE8E3 /* Assets.xcassets */; };
 		5904BF56237A511D007EE8E3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5904BF54237A511D007EE8E3 /* LaunchScreen.storyboard */; };
 		5904BF60237BA9ED007EE8E3 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5904BF5F237BA9ED007EE8E3 /* Login.storyboard */; };
+		5A1CED4FBC422ECA6330A662 /* Pods_bike_marketplace.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0B7B4718995FB441ED6FF03 /* Pods_bike_marketplace.framework */; };
+		6776735D237E7CCE003D571F /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67767358237E7CCE003D571F /* SettingsViewController.swift */; };
+		6776735E237E7CCE003D571F /* NewPostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67767359237E7CCE003D571F /* NewPostingViewController.swift */; };
+		6776735F237E7CCE003D571F /* BikeFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6776735A237E7CCE003D571F /* BikeFeedViewController.swift */; };
+		67767360237E7CCE003D571F /* ViewListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6776735B237E7CCE003D571F /* ViewListingViewController.swift */; };
+		67767361237E7CCE003D571F /* ImageAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6776735C237E7CCE003D571F /* ImageAddViewController.swift */; };
+		67767363237E7D7A003D571F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 67767362237E7D7A003D571F /* GoogleService-Info.plist */; };
 		BA67CCAD237D079C00348132 /* UserLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA67CCA8237D079C00348132 /* UserLoginViewController.swift */; };
 		BA67CCAE237D079C00348132 /* PhoneEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA67CCA9237D079C00348132 /* PhoneEntryViewController.swift */; };
 		BA67CCAF237D079C00348132 /* VerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA67CCAA237D079C00348132 /* VerificationViewController.swift */; };
@@ -22,6 +29,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		358FBF7A84ADBFF06F734785 /* Pods-bike_marketplace.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bike_marketplace.release.xcconfig"; path = "Target Support Files/Pods-bike_marketplace/Pods-bike_marketplace.release.xcconfig"; sourceTree = "<group>"; };
 		5904BF46237A5117007EE8E3 /* bike_marketplace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bike_marketplace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5904BF49237A5117007EE8E3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5904BF4B237A5117007EE8E3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -31,11 +39,19 @@
 		5904BF55237A511D007EE8E3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5904BF57237A511D007EE8E3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5904BF5F237BA9ED007EE8E3 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
+		67767358237E7CCE003D571F /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		67767359237E7CCE003D571F /* NewPostingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewPostingViewController.swift; sourceTree = "<group>"; };
+		6776735A237E7CCE003D571F /* BikeFeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BikeFeedViewController.swift; sourceTree = "<group>"; };
+		6776735B237E7CCE003D571F /* ViewListingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewListingViewController.swift; sourceTree = "<group>"; };
+		6776735C237E7CCE003D571F /* ImageAddViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAddViewController.swift; sourceTree = "<group>"; };
+		67767362237E7D7A003D571F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		71E6F5E675455F31A9C513D2 /* Pods-bike_marketplace.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bike_marketplace.debug.xcconfig"; path = "Target Support Files/Pods-bike_marketplace/Pods-bike_marketplace.debug.xcconfig"; sourceTree = "<group>"; };
 		BA67CCA8237D079C00348132 /* UserLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserLoginViewController.swift; sourceTree = "<group>"; };
 		BA67CCA9237D079C00348132 /* PhoneEntryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneEntryViewController.swift; sourceTree = "<group>"; };
 		BA67CCAA237D079C00348132 /* VerificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationViewController.swift; sourceTree = "<group>"; };
 		BA67CCAB237D079C00348132 /* ProfileSetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileSetupViewController.swift; sourceTree = "<group>"; };
 		BA67CCAC237D079C00348132 /* PasswordCreationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordCreationViewController.swift; sourceTree = "<group>"; };
+		C0B7B4718995FB441ED6FF03 /* Pods_bike_marketplace.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_bike_marketplace.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A1CED4FBC422ECA6330A662 /* Pods_bike_marketplace.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,6 +71,8 @@
 			children = (
 				5904BF48237A5117007EE8E3 /* bike_marketplace */,
 				5904BF47237A5117007EE8E3 /* Products */,
+				E7E2105351A944B98AE092E3 /* Pods */,
+				A565E190559C58D2F9030AB1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -75,14 +94,38 @@
 				5904BF52237A511D007EE8E3 /* Assets.xcassets */,
 				5904BF54237A511D007EE8E3 /* LaunchScreen.storyboard */,
 				5904BF57237A511D007EE8E3 /* Info.plist */,
+				67767362237E7D7A003D571F /* GoogleService-Info.plist */,
 				5904BF5F237BA9ED007EE8E3 /* Login.storyboard */,
 				BA67CCAC237D079C00348132 /* PasswordCreationViewController.swift */,
 				BA67CCA9237D079C00348132 /* PhoneEntryViewController.swift */,
 				BA67CCAB237D079C00348132 /* ProfileSetupViewController.swift */,
 				BA67CCA8237D079C00348132 /* UserLoginViewController.swift */,
 				BA67CCAA237D079C00348132 /* VerificationViewController.swift */,
+				6776735A237E7CCE003D571F /* BikeFeedViewController.swift */,
+				6776735C237E7CCE003D571F /* ImageAddViewController.swift */,
+				67767359237E7CCE003D571F /* NewPostingViewController.swift */,
+				67767358237E7CCE003D571F /* SettingsViewController.swift */,
+				6776735B237E7CCE003D571F /* ViewListingViewController.swift */,
 			);
 			path = bike_marketplace;
+			sourceTree = "<group>";
+		};
+		A565E190559C58D2F9030AB1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C0B7B4718995FB441ED6FF03 /* Pods_bike_marketplace.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E7E2105351A944B98AE092E3 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				71E6F5E675455F31A9C513D2 /* Pods-bike_marketplace.debug.xcconfig */,
+				358FBF7A84ADBFF06F734785 /* Pods-bike_marketplace.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -92,9 +135,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5904BF5A237A511D007EE8E3 /* Build configuration list for PBXNativeTarget "bike_marketplace" */;
 			buildPhases = (
+				1BDD54CE466D7DAA203CE164 /* [CP] Check Pods Manifest.lock */,
 				5904BF42237A5117007EE8E3 /* Sources */,
 				5904BF43237A5117007EE8E3 /* Frameworks */,
 				5904BF44237A5117007EE8E3 /* Resources */,
+				B7E0E6A6AC30D03F359A7B8A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -145,6 +190,7 @@
 			files = (
 				5904BF60237BA9ED007EE8E3 /* Login.storyboard in Resources */,
 				5904BF56237A511D007EE8E3 /* LaunchScreen.storyboard in Resources */,
+				67767363237E7D7A003D571F /* GoogleService-Info.plist in Resources */,
 				5904BF53237A511D007EE8E3 /* Assets.xcassets in Resources */,
 				5904BF51237A5117007EE8E3 /* Main.storyboard in Resources */,
 			);
@@ -152,19 +198,66 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		1BDD54CE466D7DAA203CE164 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-bike_marketplace-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B7E0E6A6AC30D03F359A7B8A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-bike_marketplace/Pods-bike_marketplace-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-bike_marketplace/Pods-bike_marketplace-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-bike_marketplace/Pods-bike_marketplace-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		5904BF42237A5117007EE8E3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				67767361237E7CCE003D571F /* ImageAddViewController.swift in Sources */,
 				BA67CCAF237D079C00348132 /* VerificationViewController.swift in Sources */,
 				5904BF4E237A5117007EE8E3 /* ViewController.swift in Sources */,
+				67767360237E7CCE003D571F /* ViewListingViewController.swift in Sources */,
 				5904BF4A237A5117007EE8E3 /* AppDelegate.swift in Sources */,
 				5904BF4C237A5117007EE8E3 /* SceneDelegate.swift in Sources */,
+				6776735E237E7CCE003D571F /* NewPostingViewController.swift in Sources */,
 				BA67CCAD237D079C00348132 /* UserLoginViewController.swift in Sources */,
+				6776735F237E7CCE003D571F /* BikeFeedViewController.swift in Sources */,
 				BA67CCB0237D079C00348132 /* ProfileSetupViewController.swift in Sources */,
 				BA67CCB1237D079C00348132 /* PasswordCreationViewController.swift in Sources */,
 				BA67CCAE237D079C00348132 /* PhoneEntryViewController.swift in Sources */,
+				6776735D237E7CCE003D571F /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,6 +399,7 @@
 		};
 		5904BF5B237A511D007EE8E3 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 71E6F5E675455F31A9C513D2 /* Pods-bike_marketplace.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -323,6 +417,7 @@
 		};
 		5904BF5C237A511D007EE8E3 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 358FBF7A84ADBFF06F734785 /* Pods-bike_marketplace.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

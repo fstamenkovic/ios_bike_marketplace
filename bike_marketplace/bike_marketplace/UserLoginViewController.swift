@@ -56,13 +56,8 @@ class UserLoginViewController: UIViewController {
                 })
                 
             } else {
-                
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let VC = storyboard.instantiateViewController(identifier: "bikeFeedViewController") as! BikeFeedViewController
-                VC.modalPresentationStyle = .fullScreen
-                
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
-                    strongSelf.present(VC, animated: true, completion: nil)
+                    strongSelf.goToBikeFeedView()
                     strongSelf.activity_indicator.isHidden = true
                     strongSelf.view.isUserInteractionEnabled = true
                 })
@@ -70,9 +65,31 @@ class UserLoginViewController: UIViewController {
         }
     }
     
+    
+    @IBAction func signUpPressed() {
+        
+        self.view.isUserInteractionEnabled = false
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let VC = storyboard.instantiateViewController(identifier: "profileSetupViewController") as! ProfileSetupViewController
+        VC.modalPresentationStyle = .fullScreen
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 , execute: {
+            self.present(VC, animated: true, completion: nil)
+            self.view.isUserInteractionEnabled = true
+        })
+        
+    }
+    
     func Init() {
         errorLabel_textField.isHidden = true
     }
     
+    func goToBikeFeedView() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let VC = storyboard.instantiateViewController(identifier: "bikeFeedViewController") as! BikeFeedViewController
+        VC.modalPresentationStyle = .fullScreen
+        self.present(VC, animated: true, completion: nil)
+    }
     
 }

@@ -9,13 +9,14 @@
 import UIKit
 
 class BikeFeedViewController: UIViewController {
+    
+    var username: String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
     }
-    
     
     @IBAction func logoutClicked() {
         let storyboard = UIStoryboard(name: "Login", bundle: nil)

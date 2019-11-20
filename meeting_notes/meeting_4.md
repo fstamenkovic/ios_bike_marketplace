@@ -1,6 +1,6 @@
-# Week 3 Meeting Minutes 
+# Sprint Planning 3 Meeting Minutes 
 
-Meeting began at 4:55pm on 11/19.
+Meeting began at 4:55pm on 11/19 over Slack.
 
 ## Project Updates
 

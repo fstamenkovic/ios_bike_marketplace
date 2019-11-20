@@ -9,10 +9,16 @@
 import UIKit
 
 class NewPostingViewController: UIViewController {
-
     
     @IBOutlet weak var category_picker: UIPickerView!
     @IBOutlet weak var color_picker: UIPickerView!
+    
+    @IBOutlet weak var posting_title: UITextField!
+    
+    @IBOutlet weak var posting_description: UITextField!
+    
+    @IBOutlet weak var price: UITextField!
+    
     
     // classes that implement picker functionality
     let categoryPickerImplementation = categoryPicker()
@@ -28,19 +34,52 @@ class NewPostingViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
 
+    
+    @IBAction func screenTapped(_ sender: Any) {
+        view.endEditing(true)
+    }
+    
+    
     // proceed to add Images
     
     @IBAction func addImagesClicked() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let title = posting_title.text else {
+            print("Could not unwrap the title.")
+            return
+        }
+        guard let description = posting_description.text else {
+            print("Could not unwrap description.")
+            return
+        }
+        
+        guard let bike_category = categoryPickerImplementation.getCategory() else{
+            print("could not unwrap bike category")
+            return
+        }
+        
+        guard let bike_color = colorPickerImplementation.getColor() else {
+            print("could not unwrap bike color")
+            return
+        }
+        
+        guard let price = price.text else {
+            print("Could not get the price")
+            return
+        }
+        
+        let new_posting = Posting(title: title, description: description, bike_color: bike_color, bike_type: bike_category, price: price)
+        
+        let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
         print("print")
         let newPostingVC = storyboard.instantiateViewController(identifier: "imageAddViewController") as! ImageAddViewController
-        // pass the information to AccountViewController
+
+        newPostingVC.newPosting = new_posting
         newPostingVC.modalPresentationStyle = .fullScreen
         
         print("print2")
         self.present(newPostingVC, animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
     }
-    
 }
 
 class categoryPicker: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource {

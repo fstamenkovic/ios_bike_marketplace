@@ -57,7 +57,7 @@ class UserLoginViewController: UIViewController {
                 
             } else {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
-                    strongSelf.goToBikeFeedView()
+                    strongSelf.goToBikeFeedView(username: username)
                     strongSelf.activity_indicator.isHidden = true
                     strongSelf.view.isUserInteractionEnabled = true
                 })
@@ -85,11 +85,13 @@ class UserLoginViewController: UIViewController {
         errorLabel_textField.isHidden = true
     }
     
-    func goToBikeFeedView() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    func goToBikeFeedView(username: String) {
+        let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
         let VC = storyboard.instantiateViewController(identifier: "bikeFeedViewController") as! BikeFeedViewController
-        VC.modalPresentationStyle = .fullScreen
-        self.present(VC, animated: true, completion: nil)
+        VC.username = username
+        let VC_nav = UINavigationController(rootViewController: VC)
+        VC_nav.modalPresentationStyle = .fullScreen
+        self.present(VC_nav, animated: true, completion: nil)
     }
     
 }

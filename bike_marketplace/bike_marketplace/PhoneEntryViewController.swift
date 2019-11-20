@@ -119,10 +119,11 @@ class PhoneEntryViewController: UIViewController {
     }
     
     func goToBikeFeedView() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let VC = storyboard.instantiateViewController(identifier: "bikeFeedViewController") as! BikeFeedViewController
+        let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
+        //let VC = storyboard.instantiateViewController(identifier: "bikeFeedViewController") as! BikeFeedViewController
+        let VC = storyboard.instantiateViewController(identifier: "nav2") as! UINavigationController
         VC.modalPresentationStyle = .fullScreen
-        VC.username = username
+        //VC.username = username
         self.present(VC, animated: true, completion: nil)
     }
     

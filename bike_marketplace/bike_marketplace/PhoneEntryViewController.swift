@@ -118,13 +118,18 @@ class PhoneEntryViewController: UIViewController {
         }
     }
     
+    /* In this case we will present the Navigation Controller of the
+    * "marketplace" storyboard, and we will specify the root View
+    * Controller to be the BikeFeedViewController.
+    */
     func goToBikeFeedView() {
         let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
-        //let VC = storyboard.instantiateViewController(identifier: "bikeFeedViewController") as! BikeFeedViewController
-        let VC = storyboard.instantiateViewController(identifier: "nav2") as! UINavigationController
-        VC.modalPresentationStyle = .fullScreen
-        //VC.username = username
-        self.present(VC, animated: true, completion: nil)
+        let VC = storyboard.instantiateViewController(identifier: "bikeFeedViewController") as! BikeFeedViewController
+        VC.username = username
+        let VC_nav = UINavigationController(rootViewController: VC)
+        VC_nav.modalPresentationStyle = .fullScreen
+        self.present(VC_nav, animated: true, completion: nil)
+        self.navigationController?.popToRootViewController(animated: true)
     }
     
 }

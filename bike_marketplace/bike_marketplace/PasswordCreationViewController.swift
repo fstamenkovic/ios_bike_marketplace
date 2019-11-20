@@ -56,9 +56,8 @@ class PasswordCreationViewController: UIViewController, UITextFieldDelegate {
         
     }
     @IBAction func submitButtonPressed(_ sender: Any) {
-        self.view.isUserInteractionEnabled = false
         errorLabel_textField.isHidden = true
-        activity_indicator.isHidden = false
+        disableUI()
         
         let db = Firestore.firestore()
         
@@ -70,7 +69,7 @@ class PasswordCreationViewController: UIViewController, UITextFieldDelegate {
         Auth.auth().createUser(withEmail: username + "@bikemarketplace.com", password: enteredPassword) { authResult, error in
             
             if (error != nil) {
-            
+                self.enableUI()
             } else {
                 guard let uid = authResult?.user.uid else {
                 print("error unwrapping uid returned from user creation firebase api call")
@@ -83,8 +82,7 @@ class PasswordCreationViewController: UIViewController, UITextFieldDelegate {
                 }
                 
                 self.goToPhoneEntryView()
-                self.activity_indicator.isHidden = true
-                self.view.isUserInteractionEnabled = true
+                self.enableUI()
             }
             
         }
@@ -95,15 +93,28 @@ class PasswordCreationViewController: UIViewController, UITextFieldDelegate {
         let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,16}$")
         return passwordTest.evaluate(with: password)
     }
+    
     func goToPhoneEntryView() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let VC = storyboard.instantiateViewController(identifier: "phoneEntryViewController") as! PhoneEntryViewController
         VC.modalPresentationStyle = .fullScreen
         VC.username = username
-        self.present(VC, animated: true, completion: nil)
+        self.navigationController?.pushViewController(VC, animated: true)
+        //self.navigationController?.popToRootViewController(animated: true)
     }
+    
     func Init() {
         submit_button.isUserInteractionEnabled = false
+    }
+    
+    func enableUI(){
+        self.view.isUserInteractionEnabled = true
+        self.activity_indicator.isHidden = true
+    }
+    
+    func disableUI(){
+        self.view.isUserInteractionEnabled = false
+        self.activity_indicator.isHidden = false
     }
 
 }

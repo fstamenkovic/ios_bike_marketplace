@@ -28,8 +28,7 @@ class UserLoginViewController: UIViewController {
     
     @IBAction func loginButtonPressed() {
         
-        self.view.isUserInteractionEnabled = false
-        self.errorLabel_textField.isHidden = true
+        disableUI()
         
         guard let username = username_textField.text else {
             print("error while unwrapping the username entered in username_textField")
@@ -41,6 +40,23 @@ class UserLoginViewController: UIViewController {
             return
         }
         
+        // greatly simplify the login process.
+        Auth.auth().signIn(withEmail: username + "@bikemarketplace.com", password: passwd) { authResult, error in
+            
+            if error != nil {
+                self.enableUI()
+                self.errorLabel_textField.text = error?.localizedDescription
+                self.errorLabel_textField.isHidden = false
+            } else {
+                self.username_textField.text = ""
+                self.password_textField.text = ""
+                self.errorLabel_textField.isHidden = true
+                self.enableUI()
+                self.goToBikeFeedView(username: username)
+            }
+        }
+        
+        /*
         Auth.auth().signIn(withEmail: username + "@bikemarketplace.com", password: passwd) { [weak self] authResult, error in
             guard let strongSelf = self else { return }
             strongSelf.activity_indicator.isHidden = false;
@@ -62,29 +78,36 @@ class UserLoginViewController: UIViewController {
                     strongSelf.view.isUserInteractionEnabled = true
                 })
             }
-        }
+        } */
     }
     
     
     @IBAction func signUpPressed() {
-        
-        self.view.isUserInteractionEnabled = false
-        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let VC = storyboard.instantiateViewController(identifier: "profileSetupViewController") as! ProfileSetupViewController
         VC.modalPresentationStyle = .fullScreen
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 , execute: {
-            self.present(VC, animated: true, completion: nil)
-            self.view.isUserInteractionEnabled = true
-        })
-        
+        self.navigationController?.pushViewController(VC, animated: true)
     }
     
     func Init() {
         errorLabel_textField.isHidden = true
+        self.activity_indicator.isHidden = true
     }
     
+    func enableUI(){
+        self.view.isUserInteractionEnabled = true
+        self.activity_indicator.isHidden = true
+    }
+    
+    func disableUI(){
+        self.view.isUserInteractionEnabled = false
+        self.activity_indicator.isHidden = false
+    }
+    
+    /* In this case we will present the Navigation Controller of the
+     * "marketplace" storyboard, and we will specify the root View
+     * Controller to be the BikeFeedViewController.
+     */
     func goToBikeFeedView(username: String) {
         let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
         let VC = storyboard.instantiateViewController(identifier: "bikeFeedViewController") as! BikeFeedViewController

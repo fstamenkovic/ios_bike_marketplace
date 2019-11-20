@@ -26,9 +26,8 @@ class ProfileSetupViewController: UIViewController {
     }
     
     @IBAction func letsGoButtonPressed() {
-        self.view.isUserInteractionEnabled = false
         self.errorLabel_textField.isHidden = true
-        activity_indicator.isHidden = false
+        disableUI()
         
         guard let enteredUsername = new_username_textField.text else {
             print("error unwrapping the entered username during profile setup")
@@ -44,19 +43,14 @@ class ProfileSetupViewController: UIViewController {
                     
                     print("username already exists")
                     self.errorLabel_textField.text = "This username is taken."
-                    self.activity_indicator.isHidden = true
                     self.errorLabel_textField.isHidden = false
-                    self.view.isUserInteractionEnabled = true
+                    self.enableUI()
                     
                 } else {
                     print("username does not exist - available for signup")
                     self.username = enteredUsername
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
-                        self.goToPasswordCreation()
-                        self.activity_indicator.isHidden = true
-                        self.view.isUserInteractionEnabled = true
-                    })
+                    self.goToPasswordCreation()
+                    self.enableUI()
                 }
             }
             
@@ -79,7 +73,17 @@ class ProfileSetupViewController: UIViewController {
         let VC = storyboard.instantiateViewController(identifier: "passwordCreationViewController") as! PasswordCreationViewController
         VC.modalPresentationStyle = .fullScreen
         VC.username = self.username
-        self.present(VC, animated: true, completion: nil)
+        self.navigationController?.pushViewController(VC, animated: true)
+    }
+    
+    func enableUI(){
+        self.view.isUserInteractionEnabled = true
+        self.activity_indicator.isHidden = true
+    }
+    
+    func disableUI(){
+        self.view.isUserInteractionEnabled = false
+        self.activity_indicator.isHidden = false
     }
     
 }

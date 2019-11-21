@@ -7,14 +7,26 @@
 //
 
 import UIKit
+import Firebase
 
-class BikeFeedViewController: UIViewController {
+class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
     
     var username: String = ""
-
+    //let tableControlImplementation = tableControl()
+    var all_postings: [Posting] = []
+    
+    @IBOutlet weak var table: UITableView!
+    
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        //table.dataSource = tableControlImplementation
+        loadBikes()
+        setupUI()
+        table.delegate = self
+        table.dataSource = self
         // Do any additional setup after loading the view.
     }
     
@@ -40,5 +52,83 @@ class BikeFeedViewController: UIViewController {
         self.present(settingsVC, animated: true, completion: nil)
     }
     
+    func loadBikes(){
+        disableUI()
+        
+        let db = Firestore.firestore()
+        
+        // get a reference to the collection
+        let ref = db.collection("postings")
+        
+        ref.getDocuments(){ (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+                self.enableUI()
+            } else {
+                guard let documents = querySnapshot?.documents else {
+                    print("Failed to unwrap documents")
+                    return
+                }
+                
+                // fills in the postings array
+                for document in documents{
+                    let posting = self.load_posting(data: document.data())
+                    self.all_postings.append(posting)
+                }
+                
+                self.enableUI()
+                self.table.reloadData()
+            }
+        }
+    }
     
+    // Initializes one Posting
+    func load_posting(data: [String : Any]) -> Posting {
+        let color = data["color"] as? String ?? ""
+        let category = data["category"] as? String ?? ""
+        let title = data["title"] as? String ?? ""
+        let price = data["price"] as? String ?? ""
+        let description = data["description"] as? String ?? ""
+            
+        let posting = Posting(title: title, description: description, bike_color: color, bike_type: category, price: price)
+            
+        return posting
+    }
+    
+    func setupUI(){
+        enableUI()
+        // hardcoded
+        // TODO find a way to do dinamically
+        table.rowHeight = 150
+    }
+    
+    func enableUI(){
+        view.isUserInteractionEnabled = true
+        activityIndicator.isHidden = true
+    }
+    
+    func disableUI(){
+        view.isUserInteractionEnabled = false
+        activityIndicator.isHidden = false
+    }
+    
+    // number of cells in section
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return all_postings.count
+    }
+    
+    // tells us how to populate a cell at index "indexPath"
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCellTableViewCell
+        
+        let current_posting = all_postings[indexPath.row]
+        
+        cell.title_label.text = current_posting.title
+        cell.color_label.text = current_posting.bike_color
+        cell.category_label.text = current_posting.bike_type
+        cell.price_label.text = current_posting.price
+        cell.description_label.text = current_posting.description
+        
+        return cell
+    }
 }

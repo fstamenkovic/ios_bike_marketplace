@@ -15,6 +15,7 @@
 		5904BF56237A511D007EE8E3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5904BF54237A511D007EE8E3 /* LaunchScreen.storyboard */; };
 		5904BF60237BA9ED007EE8E3 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5904BF5F237BA9ED007EE8E3 /* Login.storyboard */; };
 		595D28032384B2FC002307C9 /* marketplace.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 595D28022384B2FC002307C9 /* marketplace.storyboard */; };
+		59A6CA6223863AB600571C11 /* CustomCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A6CA6123863AB600571C11 /* CustomCellTableViewCell.swift */; };
 		59E172982384BBB400967E8A /* models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E172972384BBB400967E8A /* models.swift */; };
 		5A1CED4FBC422ECA6330A662 /* Pods_bike_marketplace.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0B7B4718995FB441ED6FF03 /* Pods_bike_marketplace.framework */; };
 		6776735D237E7CCE003D571F /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67767358237E7CCE003D571F /* SettingsViewController.swift */; };
@@ -42,6 +43,7 @@
 		5904BF57237A511D007EE8E3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5904BF5F237BA9ED007EE8E3 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
 		595D28022384B2FC002307C9 /* marketplace.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = marketplace.storyboard; sourceTree = "<group>"; };
+		59A6CA6123863AB600571C11 /* CustomCellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCellTableViewCell.swift; sourceTree = "<group>"; };
 		59E172972384BBB400967E8A /* models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = models.swift; sourceTree = "<group>"; };
 		67767358237E7CCE003D571F /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		67767359237E7CCE003D571F /* NewPostingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewPostingViewController.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 				6776735B237E7CCE003D571F /* ViewListingViewController.swift */,
 				595D28022384B2FC002307C9 /* marketplace.storyboard */,
 				59E172972384BBB400967E8A /* models.swift */,
+				59A6CA6123863AB600571C11 /* CustomCellTableViewCell.swift */,
 			);
 			path = bike_marketplace;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 				5904BF4C237A5117007EE8E3 /* SceneDelegate.swift in Sources */,
 				6776735E237E7CCE003D571F /* NewPostingViewController.swift in Sources */,
 				59E172982384BBB400967E8A /* models.swift in Sources */,
+				59A6CA6223863AB600571C11 /* CustomCellTableViewCell.swift in Sources */,
 				BA67CCAD237D079C00348132 /* UserLoginViewController.swift in Sources */,
 				6776735F237E7CCE003D571F /* BikeFeedViewController.swift in Sources */,
 				BA67CCB0237D079C00348132 /* ProfileSetupViewController.swift in Sources */,

@@ -9,8 +9,8 @@
 import UIKit
 import Firebase
 
-class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
-    
+class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, refreshMarkeplace{
+
     var username: String = ""
     //let tableControlImplementation = tableControl()
     var all_postings: [Posting] = []
@@ -18,7 +18,6 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
     @IBOutlet weak var table: UITableView!
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,9 +37,8 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
     @IBAction func newPostingClicked() {
         let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
         let newPostingVC = storyboard.instantiateViewController(identifier: "newPostingViewController") as! NewPostingViewController
-        //newPostingVC.modalPresentationStyle = .fullScreen
-        
-        //self.present(newPostingVC, animated: true, completion: nil)
+
+        newPostingVC.reload_delegate = self
         self.navigationController?.pushViewController(newPostingVC, animated: true)
     }
     
@@ -69,6 +67,8 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
                     print("Failed to unwrap documents")
                     return
                 }
+                
+                self.all_postings.removeAll()
                 
                 // fills in the postings array
                 for document in documents{
@@ -130,5 +130,28 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
         cell.description_label.text = current_posting.description
         
         return cell
+    }
+    
+    // delegate function to recognize row selection
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
+        
+        // error check to prevent a crash
+        if indexPath.row > all_postings.count {
+            print("Selected tableCellView outside of postings array bounds")
+            return
+        }
+        
+        // instantiate a ViewPostingViewController, pass information and display
+        let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
+        let ViewPostingVC = storyboard.instantiateViewController(identifier: "viewListingViewController") as! ViewListingViewController
+        
+        ViewPostingVC.modalPresentationStyle = .fullScreen
+        ViewPostingVC.posting = all_postings[indexPath.row]
+        self.navigationController?.pushViewController(ViewPostingVC, animated: true)
+        
+    }
+    
+    func reloadTable() {
+        loadBikes()
     }
 }

@@ -23,6 +23,8 @@ class NewPostingViewController: UIViewController {
     // classes that implement picker functionality
     let categoryPickerImplementation = categoryPicker()
     let colorPickerImplementation = colorPicker()
+
+    var reload_delegate: refreshMarkeplace?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,6 +76,7 @@ class NewPostingViewController: UIViewController {
         let newPostingVC = storyboard.instantiateViewController(identifier: "imageAddViewController") as! ImageAddViewController
 
         newPostingVC.newPosting = new_posting
+        newPostingVC.reload_delegate = reload_delegate
         newPostingVC.modalPresentationStyle = .fullScreen
         
         print("print2")

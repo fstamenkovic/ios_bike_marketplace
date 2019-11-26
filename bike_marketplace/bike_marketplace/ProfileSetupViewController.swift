@@ -11,13 +11,13 @@ import FirebaseAuth
 import Firebase
 
 class ProfileSetupViewController: UIViewController {
-
-    @IBOutlet weak var errorLabel_textField: UITextField!
+    
+    @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var activity_indicator: UIActivityIndicatorView!
     @IBOutlet weak var new_username_textField: UITextField!
     @IBOutlet weak var lets_go_button: UIButton!
     
-    var username: String = ""
+    var NewUser: User = User()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +26,7 @@ class ProfileSetupViewController: UIViewController {
     }
     
     @IBAction func letsGoButtonPressed() {
-        self.errorLabel_textField.isHidden = true
+        self.errorLabel.isHidden = true
         disableUI()
         
         guard let enteredUsername = new_username_textField.text else {
@@ -35,30 +35,13 @@ class ProfileSetupViewController: UIViewController {
         }
         
         if usernameIsValid(enteredUsername) {
-            let db = Firestore.firestore()
-            let matchingUsername = db.collection("usernames").document(enteredUsername)
-            
-            matchingUsername.getDocument { (document, error) in
-                if let document = document, document.exists {
-                    
-                    print("username already exists")
-                    self.errorLabel_textField.text = "This username is taken."
-                    self.errorLabel_textField.isHidden = false
-                    self.enableUI()
-                    
-                } else {
-                    print("username does not exist - available for signup")
-                    self.username = enteredUsername
-                    self.goToPasswordCreation()
-                    self.enableUI()
-                }
-            }
+            checkIfUsernameTaken(enteredUsername)
             
         } else {
-            errorLabel_textField.text = "Invalid username. Please enter a username 4-12 characters in length containing only numbers and/or lowercase letters."
-            self.activity_indicator.isHidden = true
-            errorLabel_textField.isHidden = false
-            self.view.isUserInteractionEnabled = true
+            errorLabel.text = "Invalid username. Please enter a username 4-12 characters in length containing only numbers and/or lowercase letters."
+            
+            errorLabel.isHidden = false
+            self.enableUI()
         }
     }
     func usernameIsValid(_ username: String) -> Bool {
@@ -67,12 +50,32 @@ class ProfileSetupViewController: UIViewController {
         
         return usernameTest.evaluate(with: username)
     }
+    func checkIfUsernameTaken(_ username: String) {
+        Auth.auth().fetchSignInMethods(forEmail: username + "@bikemarketplace.com") { (signInMethods, error) in
+            
+            if (error != nil) {
+                print("error in Firebase fetchSignInMethods call")
+            } else {
+                if (signInMethods != nil) {
+                    print("username is already in use")
+                    self.errorLabel.text = "Username is taken."
+                    self.errorLabel.isHidden = false
+                    self.enableUI()
+                } else {
+                    print("username is available")
+                    self.NewUser.username = username
+                    self.goToPasswordCreation()
+                    self.enableUI()
+                }
+            }
+        }
+    }
     
     func goToPasswordCreation() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let VC = storyboard.instantiateViewController(identifier: "passwordCreationViewController") as! PasswordCreationViewController
         VC.modalPresentationStyle = .fullScreen
-        VC.username = self.username
+        VC.NewUser = self.NewUser
         self.navigationController?.pushViewController(VC, animated: true)
     }
     

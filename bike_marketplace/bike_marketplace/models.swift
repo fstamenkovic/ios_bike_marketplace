@@ -10,6 +10,24 @@
 
 import Foundation
 
+// Firebase already has a class name User, we may need to change the name of this to avoid confusion
+class User {
+    var username: String
+    var phone_number: String
+    var user_postings: [String]
+    
+    init() {
+        self.username = ""
+        self.phone_number = ""
+        self.user_postings = [String]()
+    }
+    
+    init(username: String, phone_number: String, user_postings: [String]) {
+        self.username = username
+        self.phone_number = phone_number
+        self.user_postings = user_postings
+    }
+}
 
 class Posting {
     var title: String = ""

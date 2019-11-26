@@ -12,13 +12,15 @@ import Firebase
 
 class PasswordCreationViewController: UIViewController, UITextFieldDelegate {
     
-    @IBOutlet weak var errorLabel_textField: UITextField!
+    @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var activity_indicator: UIActivityIndicatorView!
     @IBOutlet weak var new_password_textField: UITextField!
     @IBOutlet weak var confirm_password_textField: UITextField!
     @IBOutlet weak var submit_button: UIButton!
     
-    var username: String = ""
+    // I feel like passing the password between view controllers is a bad idea or having a global password variable in general
+    var NewUser: User = User()
+    var password: String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,57 +37,40 @@ class PasswordCreationViewController: UIViewController, UITextFieldDelegate {
         }
         
         if passwordIsValid(enteredPassword) {
-            errorLabel_textField.isHidden = true
-            submit_button.isUserInteractionEnabled = true
+            errorLabel.isHidden = true
+            confirm_password_textField.isUserInteractionEnabled = true
         } else {
             submit_button.isUserInteractionEnabled = false
-            errorLabel_textField.text = "Please enter a password with a length 8-16 characters, including at least one number and one special character (@$!%*#?&)."
-            errorLabel_textField.isHidden = false
+            confirm_password_textField.isUserInteractionEnabled = false
+            errorLabel.text = "Please enter a password with a length 8-16 characters, including at least one number and one special character (@$!%*#?&)."
+            errorLabel.isHidden = false
         }
     }
     
     @IBAction func confirmPasswordFieldChanged() {
         if (new_password_textField.text != confirm_password_textField.text) {
-            errorLabel_textField.text = "The passwords don't match."
-            errorLabel_textField.isHidden = false
+            errorLabel.text = "The passwords don't match."
+            errorLabel.isHidden = false
             submit_button.isUserInteractionEnabled = false
         } else {
-            errorLabel_textField.isHidden = true
+            errorLabel.isHidden = true
             submit_button.isUserInteractionEnabled = true
         }
         
     }
     @IBAction func submitButtonPressed(_ sender: Any) {
-        errorLabel_textField.isHidden = true
+        errorLabel.isHidden = true
         disableUI()
-        
-        let db = Firestore.firestore()
         
         guard let enteredPassword = new_password_textField.text else {
             print("error unwrapping the entered password on password setup view")
             return
         }
         
-        Auth.auth().createUser(withEmail: username + "@bikemarketplace.com", password: enteredPassword) { authResult, error in
-            
-            if (error != nil) {
-                self.enableUI()
-            } else {
-                guard let uid = authResult?.user.uid else {
-                print("error unwrapping uid returned from user creation firebase api call")
-                    return
-                }
-                db.collection("usernames").document(self.username).setData([ "uid":uid]){ (error) in
-                    if (error != nil) {
-                        print("error adding user to usernames collection")
-                    }
-                }
-                
-                self.goToPhoneEntryView()
-                self.enableUI()
-            }
-            
-        }
+        self.password = enteredPassword
+        
+        self.goToPhoneEntryView()
+        self.enableUI()
     }
     
     func passwordIsValid(_ password : String) -> Bool {
@@ -98,7 +83,8 @@ class PasswordCreationViewController: UIViewController, UITextFieldDelegate {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let VC = storyboard.instantiateViewController(identifier: "phoneEntryViewController") as! PhoneEntryViewController
         VC.modalPresentationStyle = .fullScreen
-        VC.username = username
+        VC.NewUser = self.NewUser
+        VC.password = self.password
         self.navigationController?.pushViewController(VC, animated: true)
         //self.navigationController?.popToRootViewController(animated: true)
     }

@@ -11,7 +11,7 @@ import Firebase
 
 class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, refreshMarkeplace{
 
-    var username: String = ""
+    var LoggedInUser: User = User()
     //let tableControlImplementation = tableControl()
     var all_postings: [Posting] = []
     

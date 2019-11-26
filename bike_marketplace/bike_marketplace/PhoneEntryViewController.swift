@@ -15,11 +15,11 @@ class PhoneEntryViewController: UIViewController {
     @IBOutlet var areaCode_button: UIButton!
     @IBOutlet var phoneNumber_textField: PhoneNumberTextField!
     @IBOutlet var submit_button: UIButton!
-    @IBOutlet var errorLabel_textField: UITextField!
+    @IBOutlet var errorLabel: UILabel!
     @IBOutlet var activity_indicator: UIActivityIndicatorView!
     
-    var username: String = ""
-    var userDocID: String = ""
+    var NewUser: User = User()
+    var password: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,9 +28,8 @@ class PhoneEntryViewController: UIViewController {
     }
     
     @IBAction func submitButtonPressed() {
-        self.view.isUserInteractionEnabled = false
-        errorLabel_textField.isHidden = true
-        activity_indicator.isHidden = false
+        self.disableUI()
+        errorLabel.isHidden = true
         
         guard let userInputPhoneNumber = phoneNumber_textField.text else {
             print("error unwrapping phone number input by user in phone entry screen")
@@ -42,20 +41,16 @@ class PhoneEntryViewController: UIViewController {
         do {
             let parsedPhoneNumber = try phoneNumberKit.parse(userInputPhoneNumber)
             
-            let phoneNumber = phoneNumberKit.format(parsedPhoneNumber, toType: .national)
+            self.NewUser.phone_number = phoneNumberKit.format(parsedPhoneNumber, toType: .national)
             
-            initializeUserInfoInDatabase(username: self.username, phoneNumber: phoneNumber)
-            activity_indicator.isHidden = true
-            goToBikeFeedView()
-            self.view.isUserInteractionEnabled = true
+            createUserAccountThenTransition(username: self.NewUser.username, password: self.password, phoneNumber: self.NewUser.phone_number)
         }
         catch {
             print("error parsing user input phone number with PhoneNumberKit")
             
-            activity_indicator.isHidden = true
-            errorLabel_textField.text = "Please enter a valid number."
-            errorLabel_textField.isHidden = false
-            self.view.isUserInteractionEnabled = true
+            errorLabel.text = "Please enter a valid number."
+            errorLabel.isHidden = false
+            self.enableUI()
         }
     }
   /*  func phoneNumberNotAlreadyInUse(phoneNumber: String) -> Bool {
@@ -83,37 +78,39 @@ class PhoneEntryViewController: UIViewController {
         
         return notAlreadyInUse
     } */
-    func initializeUserInfoInDatabase(username: String, phoneNumber: String) {
-        let db = Firestore.firestore()
+    func createUserAccountThenTransition(username: String, password: String, phoneNumber: String) {
         
-        let docRef = db.collection("usernames").document(username)
-
-        docRef.getDocument { (document, error) in
-            if let document = document, document.exists {
-                
-                guard let uid = document.get("uid") else {
-                    print("error unwrapping uid read from usernames collection in firebase")
+        // Adds username and password to Authentication tab in Firebase, this function generates the uid
+        Auth.auth().createUser(withEmail: username + "@bikemarketplace.com", password: password) { authResult, error in
+            
+            if (error != nil) {
+                self.enableUI()
+                print("error during firebase API createUser call")
+            } else {
+                guard let uid = authResult?.user.uid else {
+                    print("error unwrapping uid returned from user creation firebase api call")
                     return
                 }
                 
-                let users = db.collection("users")
-                
-                var newuser: DocumentReference? = nil
-                
-                newuser = users.addDocument(data: [
-                    "uid" : uid,
-                    "username" : username,
-                    "phonenumber" : phoneNumber
-                ]) { error in
-                    if let error = error {
-                        print("error adding document containing uid, username, and phonenumber to users collection")
-                    } else {
-                        print("Document added with ID: \(newuser!.documentID)")
-
-                    }
-                }
+                self.initializeUserInfoInDatabase(uid: uid)
+            }
+        }
+    }
+    func initializeUserInfoInDatabase(uid: String) {
+        
+        let db = Firestore.firestore()
+        
+        db.collection("users").document(uid).setData([
+            "username" : self.NewUser.username,
+            "phone_number" : self.NewUser.phone_number,
+            "user_postings": self.NewUser.user_postings
+        ]) { error in
+            if let error = error {
+                print("error adding document containing username and phonenumber to users collection")
             } else {
-                print("no document exists in usernames collection for given username")
+                print("User document initialized")
+                self.goToBikeFeedView()
+                self.enableUI()
             }
         }
     }
@@ -125,11 +122,20 @@ class PhoneEntryViewController: UIViewController {
     func goToBikeFeedView() {
         let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
         let VC = storyboard.instantiateViewController(identifier: "bikeFeedViewController") as! BikeFeedViewController
-        VC.username = username
+        VC.LoggedInUser = self.NewUser
         let VC_nav = UINavigationController(rootViewController: VC)
         VC_nav.modalPresentationStyle = .fullScreen
         self.present(VC_nav, animated: true, completion: nil)
         self.navigationController?.popToRootViewController(animated: true)
     }
     
+    func enableUI(){
+        self.view.isUserInteractionEnabled = true
+        self.activity_indicator.isHidden = true
+    }
+    
+    func disableUI(){
+        self.view.isUserInteractionEnabled = false
+        self.activity_indicator.isHidden = false
+    }
 }

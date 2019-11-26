@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gdJ-aT-HoJ">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -359,9 +359,12 @@
                                 <state key="normal" title="Browse Images">
                                     <color key="titleColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="choose_image:" destination="KVW-Ad-JdJ" eventType="touchUpInside" id="JaR-3e-rpn"/>
+                                </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JP2-TH-koN">
-                                <rect key="frame" x="30" y="74" width="354" height="300"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera.on.rectangle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="JP2-TH-koN">
+                                <rect key="frame" x="30" y="73.5" width="354" height="301"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="300" id="o56-Bw-u0D"/>
                                 </constraints>
@@ -386,12 +389,13 @@
                         <viewLayoutGuide key="safeArea" id="oFi-J6-QbS"/>
                     </view>
                     <connections>
-                        <outlet property="activity_indicator" destination="zXF-z9-OBc" id="wR7-Hb-14g"/>
+                        <outlet property="activity_indicator" destination="zXF-z9-OBc" id="lP2-8e-m06"/>
+                        <outlet property="picture" destination="JP2-TH-koN" id="DQL-XL-Lej"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9zr-Mb-Si4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3313.04347826087" y="-282.58928571428572"/>
+            <point key="canvasLocation" x="3630" y="-281"/>
         </scene>
         <!--View Listing View Controller-->
         <scene sceneID="eU6-kv-yjV">
@@ -527,4 +531,7 @@
             <point key="canvasLocation" x="824.63768115942037" y="91.741071428571431"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="camera.on.rectangle.fill" catalog="system" width="64" height="48"/>
+    </resources>
 </document>

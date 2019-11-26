@@ -108,13 +108,13 @@
 				BA67CCA8237D079C00348132 /* UserLoginViewController.swift */,
 				BA67CCAA237D079C00348132 /* VerificationViewController.swift */,
 				6776735A237E7CCE003D571F /* BikeFeedViewController.swift */,
-				6776735C237E7CCE003D571F /* ImageAddViewController.swift */,
-				67767359237E7CCE003D571F /* NewPostingViewController.swift */,
 				67767358237E7CCE003D571F /* SettingsViewController.swift */,
 				6776735B237E7CCE003D571F /* ViewListingViewController.swift */,
-				595D28022384B2FC002307C9 /* marketplace.storyboard */,
 				59E172972384BBB400967E8A /* models.swift */,
 				59A6CA6123863AB600571C11 /* CustomCellTableViewCell.swift */,
+				595D28022384B2FC002307C9 /* marketplace.storyboard */,
+				6776735C237E7CCE003D571F /* ImageAddViewController.swift */,
+				67767359237E7CCE003D571F /* NewPostingViewController.swift */,
 			);
 			path = bike_marketplace;
 			sourceTree = "<group>";
@@ -414,6 +414,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QPBQ9RVVCY;
 				INFOPLIST_FILE = bike_marketplace/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -432,6 +433,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QPBQ9RVVCY;
 				INFOPLIST_FILE = bike_marketplace/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

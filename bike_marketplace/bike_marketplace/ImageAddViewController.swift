@@ -3,6 +3,7 @@
 //  bike_marketplace
 //
 //  Created by Filip Stamenkovic on 11/12/19.
+//  Ryland Sepic worked on this too
 //  Copyright © 2019 189e-tigers. All rights reserved.
 //
 
@@ -15,12 +16,14 @@ protocol refreshMarkeplace{
     func reloadTable()
 }
 
-class ImageAddViewController: UIViewController {
-    
+// Import: UIImagePickerControllerDelegate to support pictures
+class ImageAddViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     // posting to be passed in from NewPostingViewController
     var newPosting: Posting? = nil
+    var image_delegate = UIImagePickerController()
+
+    @IBOutlet weak var picture: UIImageView!
     var reload_delegate :refreshMarkeplace?
-    
     @IBOutlet weak var activity_indicator: UIActivityIndicatorView!
     
     
@@ -28,6 +31,22 @@ class ImageAddViewController: UIViewController {
         super.viewDidLoad()
         enableUI()
         // Do any additional setup after loading the view.
+    }
+    
+    @IBAction func choose_image(_ sender: Any) {
+        // Delegate source type (camera, photo library, or saved photos album)
+        image_delegate.sourceType = UIImagePickerController.SourceType.photoLibrary
+        image_delegate.delegate = self
+     //   image_delegate.allowsEditing = true  // Editing view shows up
+        
+        // Make sure device allows application to access the photo library
+        if (!UIImagePickerController.isSourceTypeAvailable(image_delegate.sourceType)) {
+            print("Source type is not availabe on the device")
+            return
+        }
+        
+        present(image_delegate, animated: true, completion: nil)
+        return
     }
     
     @IBAction func postClicked() {
@@ -59,7 +78,7 @@ class ImageAddViewController: UIViewController {
                 }
         }
     }
-    
+
     func enableUI(){
         view.isUserInteractionEnabled = true
         activity_indicator.isHidden = true
@@ -69,5 +88,15 @@ class ImageAddViewController: UIViewController {
         view.isUserInteractionEnabled = false
         activity_indicator.isHidden = false
     }
-    
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        guard let pic = info[.originalImage] as? UIImage else {
+            print("Image not loaded")
+            return
+        }
+
+        picture.image = pic
+        dismiss(animated: true, completion: nil)
+    }
 }

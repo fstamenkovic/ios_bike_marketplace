@@ -344,7 +344,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wmj-Ax-vLd">
-                                <rect key="frame" x="182.5" y="507.5" width="49" height="39"/>
+                                <rect key="frame" x="176" y="514" width="62" height="39"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <state key="normal" title="Post!">
                                     <color key="titleColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -354,7 +354,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LIH-kx-Hk1">
-                                <rect key="frame" x="134.5" y="428.5" width="145" height="39"/>
+                                <rect key="frame" x="135" y="467" width="145" height="39"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <state key="normal" title="Browse Images">
                                     <color key="titleColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -363,39 +363,60 @@
                                     <action selector="choose_image:" destination="KVW-Ad-JdJ" eventType="touchUpInside" id="JaR-3e-rpn"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera.on.rectangle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="JP2-TH-koN">
-                                <rect key="frame" x="30" y="73.5" width="354" height="301"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JP2-TH-koN">
+                                <rect key="frame" x="44" y="91.5" width="306" height="264"/>
+                                <gestureRecognizers/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="300" id="o56-Bw-u0D"/>
+                                    <constraint firstAttribute="height" constant="264" id="eyc-db-xKo"/>
+                                    <constraint firstAttribute="width" constant="306" id="lQ2-eB-iuf"/>
                                 </constraints>
                             </imageView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="zXF-z9-OBc">
-                                <rect key="frame" x="188.5" y="429.5" width="37" height="37"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IMH-Mc-y7y">
+                                <rect key="frame" x="318" y="374" width="32" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Next"/>
+                                <connections>
+                                    <action selector="next:" destination="KVW-Ad-JdJ" eventType="touchUpInside" id="jak-It-hGG"/>
+                                </connections>
+                            </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="zXF-z9-OBc">
+                                <rect key="frame" x="188" y="430" width="37" height="37"/>
                             </activityIndicatorView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f1l-iV-iU6">
+                                <rect key="frame" x="40" y="374" width="71" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Remove"/>
+                                <connections>
+                                    <action selector="remove_image:" destination="KVW-Ad-JdJ" eventType="touchUpInside" id="cdV-52-qAc"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="JP2-TH-koN" firstAttribute="top" secondItem="oFi-J6-QbS" secondAttribute="top" constant="30" id="1yU-GY-HXJ"/>
-                            <constraint firstItem="wmj-Ax-vLd" firstAttribute="top" secondItem="LIH-kx-Hk1" secondAttribute="bottom" constant="40" id="KVp-np-Guz"/>
-                            <constraint firstItem="zXF-z9-OBc" firstAttribute="centerY" secondItem="WJw-ge-mbO" secondAttribute="centerY" id="OAq-P5-8BC"/>
-                            <constraint firstItem="zXF-z9-OBc" firstAttribute="centerX" secondItem="WJw-ge-mbO" secondAttribute="centerX" id="Pbe-cX-gme"/>
-                            <constraint firstItem="oFi-J6-QbS" firstAttribute="trailing" secondItem="JP2-TH-koN" secondAttribute="trailing" constant="30" id="Xrl-bH-dnH"/>
-                            <constraint firstItem="JP2-TH-koN" firstAttribute="centerX" secondItem="WJw-ge-mbO" secondAttribute="centerX" id="acP-mD-tCg"/>
-                            <constraint firstItem="LIH-kx-Hk1" firstAttribute="top" secondItem="JP2-TH-koN" secondAttribute="bottom" constant="54.5" id="dwk-x8-jSM"/>
-                            <constraint firstItem="wmj-Ax-vLd" firstAttribute="centerX" secondItem="WJw-ge-mbO" secondAttribute="centerX" id="icc-Rq-z1f"/>
-                            <constraint firstItem="JP2-TH-koN" firstAttribute="leading" secondItem="oFi-J6-QbS" secondAttribute="leading" constant="30" id="j0o-Dm-oLU"/>
-                            <constraint firstItem="LIH-kx-Hk1" firstAttribute="centerX" secondItem="WJw-ge-mbO" secondAttribute="centerX" id="qgZ-Dj-zkB"/>
+                            <constraint firstItem="oFi-J6-QbS" firstAttribute="trailing" secondItem="wmj-Ax-vLd" secondAttribute="trailing" constant="176" id="0uP-Dy-d6j"/>
+                            <constraint firstItem="LIH-kx-Hk1" firstAttribute="leading" secondItem="oFi-J6-QbS" secondAttribute="leading" constant="135" id="6qo-Re-a6A"/>
+                            <constraint firstItem="JP2-TH-koN" firstAttribute="leading" secondItem="oFi-J6-QbS" secondAttribute="leading" constant="44" id="AiT-GF-BXy"/>
+                            <constraint firstItem="wmj-Ax-vLd" firstAttribute="leading" secondItem="oFi-J6-QbS" secondAttribute="leading" constant="176" id="EXo-ZP-mB6"/>
+                            <constraint firstItem="oFi-J6-QbS" firstAttribute="trailing" secondItem="LIH-kx-Hk1" secondAttribute="trailing" constant="134" id="Fo6-oU-drE"/>
+                            <constraint firstItem="oFi-J6-QbS" firstAttribute="trailing" secondItem="JP2-TH-koN" secondAttribute="trailing" constant="64" id="LrK-1I-6Mn"/>
+                            <constraint firstItem="zXF-z9-OBc" firstAttribute="centerX" secondItem="oFi-J6-QbS" secondAttribute="centerX" id="XaZ-Z0-wLS"/>
+                            <constraint firstItem="oFi-J6-QbS" firstAttribute="bottom" secondItem="wmj-Ax-vLd" secondAttribute="bottom" constant="309" id="ZaC-5E-EEY"/>
+                            <constraint firstItem="JP2-TH-koN" firstAttribute="top" secondItem="oFi-J6-QbS" secondAttribute="top" constant="47.5" id="ZbI-g1-Zqn"/>
+                            <constraint firstItem="wmj-Ax-vLd" firstAttribute="top" secondItem="LIH-kx-Hk1" secondAttribute="bottom" constant="8" id="ckD-SS-Lmi"/>
+                            <constraint firstItem="zXF-z9-OBc" firstAttribute="centerY" secondItem="oFi-J6-QbS" secondAttribute="centerY" id="irJ-a1-ole"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="oFi-J6-QbS"/>
                     </view>
                     <connections>
                         <outlet property="activity_indicator" destination="zXF-z9-OBc" id="lP2-8e-m06"/>
+                        <outlet property="next_button" destination="IMH-Mc-y7y" id="k4q-s1-11M"/>
                         <outlet property="picture" destination="JP2-TH-koN" id="DQL-XL-Lej"/>
+                        <outlet property="remove_button" destination="f1l-iV-iU6" id="mbt-rC-9dM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9zr-Mb-Si4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3630" y="-281"/>
+            <point key="canvasLocation" x="3628.985507246377" y="-281.25"/>
         </scene>
         <!--View Listing View Controller-->
         <scene sceneID="eU6-kv-yjV">
@@ -531,7 +552,4 @@
             <point key="canvasLocation" x="824.63768115942037" y="91.741071428571431"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="camera.on.rectangle.fill" catalog="system" width="64" height="48"/>
-    </resources>
 </document>

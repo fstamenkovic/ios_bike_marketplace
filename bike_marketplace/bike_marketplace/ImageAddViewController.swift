@@ -21,32 +21,95 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
     // posting to be passed in from NewPostingViewController
     var newPosting: Posting? = nil
     var image_delegate = UIImagePickerController()
-
+    
+    // Image support
     @IBOutlet weak var picture: UIImageView!
+    var image_arr: [UIImage] = []
+    @IBOutlet weak var remove_button: UIButton!
+    @IBOutlet weak var next_button: UIButton!
+    
     var reload_delegate :refreshMarkeplace?
     @IBOutlet weak var activity_indicator: UIActivityIndicatorView!
-    
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         enableUI()
         // Do any additional setup after loading the view.
     }
+
     
     @IBAction func choose_image(_ sender: Any) {
         // Delegate source type (camera, photo library, or saved photos album)
         image_delegate.sourceType = UIImagePickerController.SourceType.photoLibrary
         image_delegate.delegate = self
-     //   image_delegate.allowsEditing = true  // Editing view shows up
-        
+     
         // Make sure device allows application to access the photo library
         if (!UIImagePickerController.isSourceTypeAvailable(image_delegate.sourceType)) {
             print("Source type is not availabe on the device")
             return
         }
+            
+        activity_indicator.startAnimating()
+        activity_indicator.isHidden = false
+        present(image_delegate, animated: true) {
+            self.activity_indicator.stopAnimating()
+            self.view.isUserInteractionEnabled = true
+        }
         
-        present(image_delegate, animated: true, completion: nil)
         return
+    }
+    
+    @IBAction func next(_ sender: Any) {
+        if image_arr.count == 0 {
+            return
+        } // Array is emtpy
+        
+        // Unwrap the image that is currently being shown
+        guard let im = picture.image else {
+            return
+        }
+        
+        // Find the displayed image in the image array
+        // If the image does not exist in the array then set i to 0
+        var i: Int = image_arr.firstIndex(of: im) ?? 0
+        
+        // Calculate index of the next image
+        if i + 1 >= image_arr.count {
+            i = 0
+        } else {
+            i += 1
+        }
+        
+        // Display the next image
+        picture.image = image_arr[i]
+    }
+    
+    
+    @IBAction func remove_image(_ sender: Any) {
+        // Unwrap the image that is currently being shown
+        guard let im = picture.image else {
+            return
+        }
+        
+        // Find the displayed image in the image array
+        // If the image does not exist in the array then set i to 0
+        var i: Int = image_arr.firstIndex(of: im) ?? 0
+        image_arr.remove(at: i)
+        
+        if image_arr.count == 0 {
+            enableUI()  // Reset the UI
+            return
+        }
+        
+        // Calculate index of the next image
+        if i + 1 >= image_arr.count {
+            i = 0
+        } else {
+            i += 1
+        }
+        
+        // Display the next image
+        picture.image = image_arr[i]
     }
     
     @IBAction func postClicked() {
@@ -81,22 +144,34 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
 
     func enableUI(){
         view.isUserInteractionEnabled = true
-        activity_indicator.isHidden = true
+        activity_indicator.hidesWhenStopped = true
+        next_button.isHidden = true
+        remove_button.isHidden = true
+        picture.image = UIImage(named: "Picture File")
     }
     
     func disableUI(){
         view.isUserInteractionEnabled = false
-        activity_indicator.isHidden = false
     }
-
+    
+    // This is a delegate function for selecting images
+    // It is invoked when the user selects on a photo in the photo album
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
+        // Unwrap the original image from teh photo library
         guard let pic = info[.originalImage] as? UIImage else {
             print("Image not loaded")
             return
         }
 
-        picture.image = pic
-        dismiss(animated: true, completion: nil)
+        picture.image = pic // Display image
+        image_arr.append(pic)   // Push the selected image into the image array
+        
+        dismiss(animated: true) { // Dismiss the photo library
+            if self.image_arr.count > 0 {
+                self.next_button.isHidden = false
+                self.remove_button.isHidden = false
+            }
+        }
     }
 }

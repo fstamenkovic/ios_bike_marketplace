@@ -7,8 +7,12 @@
 //
 
 import UIKit
+import FirebaseAuth
+import Firebase
 
 class SettingsViewController: UIViewController {
+    
+    var LoggedInUser: User = User()
 
     @IBOutlet weak var nameLabel: UILabel!
     //view with all the main UIElements
@@ -46,13 +50,16 @@ class SettingsViewController: UIViewController {
         let alert = UIAlertController(title: "Delete Account", message: "Are you sure you want to delete Account?", preferredStyle: .alert)
         
         alert.addTextField(configurationHandler: {(textField) in
+            textField.isSecureTextEntry = true
             textField.placeholder = "Enter Password"
             textField.becomeFirstResponder()
         })
         
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action) -> Void in
-            let textField = alert.textFields![0] as UITextField
-            textField.resignFirstResponder()
+            let passwordTextField = alert.textFields![0] as UITextField
+            passwordTextField.resignFirstResponder()
+            self.disableUI()
+            self.verifyPassword(textField: passwordTextField)
         }))
     
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) -> Void in
@@ -153,6 +160,95 @@ class SettingsViewController: UIViewController {
         self.present(alert, animated: true)
     }
     
+
+    func deleteUserThenTransition() {
+        let user = Auth.auth().currentUser
+        guard let uid = user?.uid else {
+            print("error unwrapping uid while deleting user")
+            return
+        }
+        self.deleteUserData(uid: uid)
+    }
     
+    // Deletes every posting associated with the user and then deletes the user's doc in users collection, returns to login view
+    func deleteUserData(uid: String) {
+        let db = Firestore.firestore()
+        
+        let user = db.collection("users").document(uid)
+
+        user.getDocument { (document, error) in
+            if let document = document, document.exists {
+                let user_postings = document.get("user_postings")
+                // Deleting all postings associated with user
+                for posting in user_postings as! [String] {
+                    self.deleteDatabaseDoc(db: db, collection: "postings", docID: posting)
+                }
+                self.deleteDatabaseDoc(db: db, collection: "users", docID: uid)
+                // When a user is deleted, we lose permission to access database, this call must be performed AFTER all the docs have been deleted. I have a feeling that for a large number of postings, some of them will fail to delete because the above loop will not complete in time before deleteUser() is called. Will probably have to use some DispatchQueues to prevent this.
+                self.deleteUser()
+                
+            } else {
+                print("User document does not exist")
+            }
+        }
+    }
+    func verifyPassword(textField: UITextField) {
+        
+        guard let enteredPasword = textField.text else {
+            print("error unwrapping entered password for authorizing account delete")
+            return
+        }
+        
+        Auth.auth().signIn(withEmail: LoggedInUser.username + "@bikemarketplace.com", password: enteredPasword) { authResult, error in
+            if error != nil {
+                print("wrongpassword")
+                self.showWrongPasswordAlert()
+                self.enableUI()
+            } else {
+                self.deleteUserThenTransition()
+            }
+        }
+    }
     
+    func showWrongPasswordAlert() {
+        let alert = UIAlertController(title: "Unable to Delete Account", message: "You've entered the wrong password.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true)
+    }
+    
+    func deleteDatabaseDoc(db: Firestore, collection: String, docID: String) {
+        db.collection(collection).document(docID).delete() { error in
+            if let error = error {
+                print("Error removing document: \(error)")
+            } else {
+                print("Document successfully removed!")
+            }
+        }
+    }
+
+    func enableUI(){
+        self.mainView.isUserInteractionEnabled = true
+        //activityIndicator.isHidden = true
+    }
+    
+    func disableUI(){
+        self.mainView.isUserInteractionEnabled = false
+        //activityIndicator.isHidden = false
+    }
+    
+    func deleteUser() {
+        let user = Auth.auth().currentUser
+        user?.delete { error in
+          if let error = error {
+            print("Error while calling Firebase user.delete")
+          } else {
+            self.goToLogin()
+            self.enableUI()
+          }
+        }
+    }
+    
+    func goToLogin() {
+        self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+    }
 }

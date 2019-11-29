@@ -30,6 +30,7 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @IBAction func logoutClicked() {
+        self.signOutUser()
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -46,6 +47,8 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
         let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
         let settingsVC = storyboard.instantiateViewController(identifier: "settingsViewController") as! SettingsViewController
         settingsVC.modalPresentationStyle = .fullScreen
+        
+        settingsVC.LoggedInUser = self.LoggedInUser
         
         self.present(settingsVC, animated: true, completion: nil)
     }
@@ -93,6 +96,16 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
         let posting = Posting(title: title, description: description, bike_color: color, bike_type: category, price: price)
             
         return posting
+    }
+    
+    func signOutUser() {
+        let firebaseAuth = Auth.auth()
+        do {
+          try firebaseAuth.signOut()
+        }
+        catch let signOutError as NSError {
+          print ("Error signing out: %@", signOutError)
+        }
     }
     
     func setupUI(){

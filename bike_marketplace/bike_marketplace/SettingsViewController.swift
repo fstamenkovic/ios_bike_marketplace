@@ -14,7 +14,6 @@ class SettingsViewController: UIViewController {
     
     var LoggedInUser: User = User()
 
-    @IBOutlet weak var nameLabel: UILabel!
     //view with all the main UIElements
     @IBOutlet weak var mainView: UIView!
     
@@ -192,6 +191,17 @@ class SettingsViewController: UIViewController {
             }
         }
     }
+    
+    @IBAction func managePostingsClicke() {
+        let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
+        let UserPostingsVC = storyboard.instantiateViewController(identifier: "postingsManagerViewController") as! PostingsManagerViewController
+        
+        UserPostingsVC.current_user = LoggedInUser
+        UserPostingsVC.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(UserPostingsVC, animated: true)
+    }
+    
+    
     func verifyPassword(textField: UITextField) {
         
         guard let enteredPasword = textField.text else {

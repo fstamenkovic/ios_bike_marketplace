@@ -50,7 +50,7 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
         
         settingsVC.LoggedInUser = self.LoggedInUser
         
-        self.present(settingsVC, animated: true, completion: nil)
+        self.navigationController?.pushViewController(settingsVC, animated: true)
     }
     
     func loadBikes(){
@@ -75,6 +75,13 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
                 
                 // fills in the postings array
                 for document in documents{
+                    let docID = document.documentID
+                    
+                    // do not show user's own postings on the feed.
+                    if self.LoggedInUser.user_postings.contains(docID) {
+                        continue
+                    }
+                    
                     let posting = self.load_posting(data: document.data())
                     self.all_postings.append(posting)
                 }
@@ -105,6 +112,34 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
         }
         catch let signOutError as NSError {
           print ("Error signing out: %@", signOutError)
+        }
+    }
+
+    // initializes the current user from database
+    func loadUser(group: DispatchGroup){
+        
+        guard let current_user = Auth.auth().currentUser else {
+            print("Could not get current user")
+            return
+        }
+        
+        let db = Firestore.firestore()
+        let userDoc = db.collection("users").document(current_user.uid)
+                
+        DispatchQueue.global(qos: .userInitiated).async{
+            userDoc.getDocument { (document, error) in
+                if let document = document {
+                    let username = document.get("username") as? String ?? ""
+                    let phone_number = document.get("phone_number") as? String ?? ""
+                    let user_postings = document.get("user_postings") as? Array ?? [""]
+                    
+                    DispatchQueue.main.async{
+                        self.LoggedInUser = User(username: username, phone_number: phone_number, user_postings: user_postings)
+                    }
+                    print("left")
+                    group.leave()
+                }
+            }
         }
     }
     
@@ -165,6 +200,18 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func reloadTable() {
-        loadBikes()
+        let group = DispatchGroup()
+        let dispatch_queue = DispatchQueue(label: "user dispatch queue")
+        
+        // synchronize the two async calls to make sure user updated before
+        // postings array updated
+        dispatch_queue.async {
+            group.enter()
+            self.loadUser(group: group)
+            group.wait()
+            DispatchQueue.main.async{
+                self.loadBikes()
+            }
+        }
     }
 }

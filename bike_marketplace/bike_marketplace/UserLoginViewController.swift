@@ -127,7 +127,7 @@ class UserLoginViewController: UIViewController {
             if let document = document {
                 let username = document.get("username")
                 let phone_number = document.get("phone_number")
-                let user_postings = [String]()
+                let user_postings = document.get("user_postings") as? Array ?? [""]
                 
                 self.ExistingUser = self.createUserObject(username: username as! String, phone_number: phone_number as! String, user_postings: user_postings)
                 
@@ -140,8 +140,9 @@ class UserLoginViewController: UIViewController {
     
     func createUserObject(username: String, phone_number: String, user_postings: [String]) -> User {
         
-        let user: User = User(username: username, phone_number: phone_number, user_postings: [String]())
+        let user: User = User(username: username, phone_number: phone_number, user_postings: user_postings)
         
+        print("\(user_postings)")
         return user
     }
     

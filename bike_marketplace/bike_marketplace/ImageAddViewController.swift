@@ -9,6 +9,7 @@
 
 import UIKit
 import Firebase
+import FirebaseAuth
 
 // make the bike feed implement this protocol. this protocol allows this
 // this View Controller to reload all postings on the bike feed
@@ -151,7 +152,9 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
         
         let ref = db.collection("postings")
         
-        ref.addDocument(data: [
+        var document_ref: DocumentReference? = nil
+        
+        document_ref = ref.addDocument(data: [
             "category": posting.bike_type,
             "color": posting.bike_color,
             "description": posting.description,
@@ -160,13 +163,28 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
                 if error != nil {
                     print("there was an error posting this")
                     self.enableUI()
+                    
                 } else {
                     print("posted posting successfully!")
+                    
+                    let user = Auth.auth().currentUser
+                    guard let user_uid = user?.uid else {
+                        print("Could not unwrap user id")
+                        return
+                    }
+                    
+                    let ref_user = db.collection("users").document("\(user_uid)")
+                    
+                    ref_user.updateData([
+                        "user_postings" : FieldValue.arrayUnion(["\(document_ref!.documentID)"])
+                    ])
+                    
                     // have the bike feed reload the table to contain this posting as well
                     self.reload_delegate?.reloadTable()
                     self.dismiss(animated: true, completion: nil)
                 }
         }
+        
     }
 
     func enableUI(){

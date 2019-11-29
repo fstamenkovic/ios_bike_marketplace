@@ -26,8 +26,9 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
     @IBOutlet weak var picture: UIImageView!
     var image_arr: [UIImage] = []
     @IBOutlet weak var remove_button: UIButton!
-    @IBOutlet weak var next_button: UIButton!
-    
+    @IBOutlet var swipe_right: UISwipeGestureRecognizer!
+    @IBOutlet var swipe_left: UISwipeGestureRecognizer!
+
     var reload_delegate :refreshMarkeplace?
     @IBOutlet weak var activity_indicator: UIActivityIndicatorView!
 
@@ -59,7 +60,33 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
         return
     }
     
-    @IBAction func next(_ sender: Any) {
+    @IBAction func prev(_ sender: UISwipeGestureRecognizer) {
+        if image_arr.count == 0 {
+           return
+       } // Array is emtpy
+       
+       // Unwrap the image that is currently being shown
+       guard let im = picture.image else {
+           return
+       }
+        
+       // Find the displayed image in the image array
+       // If the image does not exist in the array then set i to 0
+       var i: Int = image_arr.firstIndex(of: im) ?? 0
+       
+       // Calculate index of the next image
+       if i - 1 < 0 {
+           i = image_arr.count - 1
+       } else {
+           i -= 1
+       }
+       
+       // Display the next image
+       picture.image = image_arr[i]
+    }
+    
+    // The sender is a swipe gesture recognizer
+    @IBAction func next(_ sender: UISwipeGestureRecognizer) {
         if image_arr.count == 0 {
             return
         } // Array is emtpy
@@ -72,7 +99,7 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
         // Find the displayed image in the image array
         // If the image does not exist in the array then set i to 0
         var i: Int = image_arr.firstIndex(of: im) ?? 0
-        
+
         // Calculate index of the next image
         if i + 1 >= image_arr.count {
             i = 0
@@ -145,8 +172,9 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
     func enableUI(){
         view.isUserInteractionEnabled = true
         activity_indicator.hidesWhenStopped = true
-        next_button.isHidden = true
         remove_button.isHidden = true
+        picture.isUserInteractionEnabled = true // Allows the user to interact with the picture
+        swipe_left.direction = .left
         picture.image = UIImage(named: "Picture File")
     }
     
@@ -169,7 +197,6 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
         
         dismiss(animated: true) { // Dismiss the photo library
             if self.image_arr.count > 0 {
-                self.next_button.isHidden = false
                 self.remove_button.isHidden = false
             }
         }

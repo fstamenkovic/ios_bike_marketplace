@@ -370,15 +370,11 @@
                                     <constraint firstAttribute="height" constant="264" id="eyc-db-xKo"/>
                                     <constraint firstAttribute="width" constant="306" id="lQ2-eB-iuf"/>
                                 </constraints>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IMH-Mc-y7y">
-                                <rect key="frame" x="318" y="374" width="32" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Next"/>
                                 <connections>
-                                    <action selector="next:" destination="KVW-Ad-JdJ" eventType="touchUpInside" id="jak-It-hGG"/>
+                                    <outletCollection property="gestureRecognizers" destination="kgI-R9-DeM" appends="YES" id="DQz-pS-m2e"/>
+                                    <outletCollection property="gestureRecognizers" destination="F5X-im-Fca" appends="YES" id="k0V-JL-Ods"/>
                                 </connections>
-                            </button>
+                            </imageView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="zXF-z9-OBc">
                                 <rect key="frame" x="188" y="430" width="37" height="37"/>
                             </activityIndicatorView>
@@ -409,12 +405,23 @@
                     </view>
                     <connections>
                         <outlet property="activity_indicator" destination="zXF-z9-OBc" id="lP2-8e-m06"/>
-                        <outlet property="next_button" destination="IMH-Mc-y7y" id="k4q-s1-11M"/>
                         <outlet property="picture" destination="JP2-TH-koN" id="DQL-XL-Lej"/>
                         <outlet property="remove_button" destination="f1l-iV-iU6" id="mbt-rC-9dM"/>
+                        <outlet property="swipe_left" destination="kgI-R9-DeM" id="PhH-Dq-68f"/>
+                        <outlet property="swipe_right" destination="F5X-im-Fca" id="EUF-8W-rpX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9zr-Mb-Si4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="kgI-R9-DeM">
+                    <connections>
+                        <action selector="next:" destination="KVW-Ad-JdJ" id="ehO-VP-08h"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="right" id="F5X-im-Fca">
+                    <connections>
+                        <action selector="prev:" destination="KVW-Ad-JdJ" id="cwK-ku-EEL"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3628.985507246377" y="-281.25"/>
         </scene>

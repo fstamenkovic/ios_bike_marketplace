@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gdJ-aT-HoJ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gdJ-aT-HoJ">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -532,9 +532,14 @@
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qgv-tj-RQ4">
                                 <rect key="frame" x="30" y="74" width="354" height="300"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="300" id="FVX-ev-FRF"/>
                                 </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="9dH-5c-dyL" appends="YES" id="flo-b8-rSf"/>
+                                    <outletCollection property="gestureRecognizers" destination="GIN-jL-nFF" appends="YES" id="xEw-f6-LUP"/>
+                                </connections>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Posting name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iu7-HK-JDE">
                                 <rect key="frame" x="30" y="394" width="129.5" height="26.5"/>
@@ -629,11 +634,24 @@
                         <outlet property="category_label" destination="eI9-t1-JoO" id="PRf-kH-tLe"/>
                         <outlet property="color_label" destination="5mR-7P-RRJ" id="BZR-wa-I4A"/>
                         <outlet property="description_label" destination="E0a-LZ-JxI" id="YkK-8f-ibJ"/>
+                        <outlet property="image" destination="qgv-tj-RQ4" id="c7d-1C-38y"/>
                         <outlet property="posting_name" destination="iu7-HK-JDE" id="6tA-rL-DY5"/>
                         <outlet property="price_label" destination="D3v-NQ-tdj" id="0rS-6w-M18"/>
+                        <outlet property="swipe_left" destination="GIN-jL-nFF" id="1Lc-OE-Vgx"/>
+                        <outlet property="swipe_right" destination="9dH-5c-dyL" id="jGt-bq-O81"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="26C-df-hCx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="9dH-5c-dyL">
+                    <connections>
+                        <action selector="prev:" destination="gsY-XI-nyG" id="CD1-4r-e9Z"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="right" id="GIN-jL-nFF">
+                    <connections>
+                        <action selector="next:" destination="gsY-XI-nyG" id="wsH-On-OkX"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-113" y="91"/>
         </scene>

@@ -10,6 +10,7 @@
 import UIKit
 import Firebase
 import FirebaseAuth
+import FirebaseStorage
 
 // make the bike feed implement this protocol. this protocol allows this
 // this View Controller to reload all postings on the bike feed
@@ -19,6 +20,7 @@ protocol refreshMarkeplace{
 
 // Import: UIImagePickerControllerDelegate to support pictures
 class ImageAddViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+
     // posting to be passed in from NewPostingViewController
     var newPosting: Posting? = nil
     var image_delegate = UIImagePickerController()
@@ -111,7 +113,7 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
         // Display the next image
         picture.image = image_arr[i]
     }
-    
+
     
     @IBAction func remove_image(_ sender: Any) {
         // Unwrap the image that is currently being shown
@@ -140,16 +142,22 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
         picture.image = image_arr[i]
     }
     
+    // This puts in the post data from the NewPostingViewController
     @IBAction func postClicked() {
+       // Makes sure that there is post data passed in from NewPostingViewController
         guard let posting = newPosting else {
             print("could not retreive the posting")
             return
         }
         
-        disableUI()
+        disableUI() // Prevent user interaction
         
+        // Create unique names for images
+        var image_name: [String] = []
+        for _ in image_arr {
+            image_name.append(UUID().uuidString)
+        }
         let db = Firestore.firestore()
-        
         let ref = db.collection("postings")
         
         var document_ref: DocumentReference? = nil
@@ -159,7 +167,8 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
             "color": posting.bike_color,
             "description": posting.description,
             "title": posting.title,
-            "price": posting.price]){error in
+            "price": posting.price,
+            "image_ID": FieldValue.arrayUnion(image_name) ]){error in
                 if error != nil {
                     print("there was an error posting this")
                     self.enableUI()
@@ -173,8 +182,16 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
                         return
                     }
                     
-                    let ref_user = db.collection("users").document("\(user_uid)")
+                    guard let doc_ref = document_ref?.documentID else {
+                        print("Error: Document reference does not exist")
+                        return
+                    }   // Unwrap the ID number of the post
                     
+                    let directory_ref = Storage.storage().reference().child(doc_ref) // Create reference for directory with the user ID
+                    
+                    self.uploadPics(image_names: image_name, ref: directory_ref)    // Load photos onto Firebase storage
+                    
+                    let ref_user = db.collection("users").document("\(user_uid)")
                     ref_user.updateData([
                         "user_postings" : FieldValue.arrayUnion(["\(document_ref!.documentID)"])
                     ])
@@ -185,6 +202,28 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
                 }
         }
         
+    }
+    
+    
+    func uploadPics(image_names: [String], ref: StorageReference) {
+        // Iterate through all of the photos in the image_arr array
+        for i in 0 ..< self.image_arr.count {
+            // Convert the photo into a jpeg
+            guard let data = self.image_arr[i].jpegData(compressionQuality: 1.0) else {
+                print("Error in getting image data")
+                return
+            }
+            
+            let storage_ref = ref.child(image_names[i]) // Storage reference is the unique name of the image, which is in the directory that is named after the post
+            
+            // Uploads the data to storage
+            storage_ref.putData(data, metadata: nil) {(metadata, err) in
+                if let err = err {
+                    print("Error: \(err.localizedDescription)")
+                    return
+                }
+            }
+        } // For
     }
 
     func enableUI(){

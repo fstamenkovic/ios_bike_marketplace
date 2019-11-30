@@ -12,13 +12,9 @@ class NewPostingViewController: UIViewController {
     
     @IBOutlet weak var category_picker: UIPickerView!
     @IBOutlet weak var color_picker: UIPickerView!
-    
     @IBOutlet weak var posting_title: UITextField!
-    
     @IBOutlet weak var posting_description: UITextField!
-    
     @IBOutlet weak var price: UITextField!
-    
     
     // classes that implement picker functionality
     let categoryPickerImplementation = categoryPicker()

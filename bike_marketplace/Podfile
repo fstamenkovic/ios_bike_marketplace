@@ -12,5 +12,6 @@ target 'bike_marketplace' do
     pod 'Firebase/Auth'
     pod 'Firebase/Firestore'
     pod 'Firebase/Analytics'
+    pod 'Firebase/Storage'
     pod 'PhoneNumberKit', '~> 3.1'
 end

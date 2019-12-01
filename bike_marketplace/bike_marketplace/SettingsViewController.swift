@@ -259,6 +259,7 @@ class SettingsViewController: UIViewController {
     }
     
     func goToLogin() {
-        self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+       
+        self.navigationController?.dismiss(animated: true, completion: nil) //self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
     }
 }

@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseAuth
 import Firebase
+import FirebaseStorage
 
 class SettingsViewController: UIViewController {
     
@@ -159,7 +160,35 @@ class SettingsViewController: UIViewController {
         self.present(alert, animated: true)
     }
     
+    
+    func verifyPassword(textField: UITextField) {
+        
+        guard let enteredPasword = textField.text else {
+            print("error unwrapping entered password for authorizing account delete")
+            return
+        }
+        
+        let user = Auth.auth().currentUser
+        let credential: AuthCredential = EmailAuthProvider.credential(withEmail: self.LoggedInUser.username + "@bikemarketplace.com", password: enteredPasword)
 
+        user?.reauthenticate(with: credential) { (result, error) in
+            if error != nil {
+                print("wrongpassword")
+                self.showWrongPasswordAlert()
+                self.enableUI()
+            } else {
+                self.deleteUserThenTransition()
+            }
+        }
+
+    }
+    
+    func showWrongPasswordAlert() {
+        let alert = UIAlertController(title: "Unable to Delete Account", message: "You've entered the wrong password.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true)
+    }
+    
     func deleteUserThenTransition() {
         let user = Auth.auth().currentUser
         guard let uid = user?.uid else {
@@ -169,27 +198,42 @@ class SettingsViewController: UIViewController {
         self.deleteUserData(uid: uid)
     }
     
-    // Deletes every posting associated with the user and then deletes the user's doc in users collection, returns to login view
+    // Deletes every posting (and its images) associated with the user and then deletes the user's doc in users collection, returns to login view
     func deleteUserData(uid: String) {
-        let db = Firestore.firestore()
         
-        let user = db.collection("users").document(uid)
+        let delete_group = DispatchGroup()
+        let delete_queue = DispatchQueue(label: "user deletion queue")
+        
+        delete_queue.async {
+            let db = Firestore.firestore()
+            let storage = StorageReference()
+            
+            let user = db.collection("users").document(uid)
 
-        user.getDocument { (document, error) in
-            if let document = document, document.exists {
-                let user_postings = document.get("user_postings")
-                // Deleting all postings associated with user
-                for posting in user_postings as! [String] {
-                    self.deleteDatabaseDoc(db: db, collection: "postings", docID: posting)
+            user.getDocument { (document, error) in
+                if let document = document, document.exists {
+                    // Delete all user's postings and image in each posting
+                    let user_postings = document.get("user_postings")
+                    
+                    for posting in user_postings as! [String] {
+                        delete_group.enter()
+                        self.deleteImagesAndPosting(delete_queue: delete_queue, delete_group: delete_group, db: db, storage: storage, postingID: posting)
+                    }
+                    delete_group.notify(queue: delete_queue) {
+                        delete_group.enter()
+                        self.deleteDatabaseDoc(group: delete_group, db: db, collection: "users", docID: uid)
+                    }
+                    // Once all docs associated with the user are deleted, we can delete the user from Authentication
+                    delete_group.notify(queue: delete_queue) {
+                        self.deleteUser()
+                    }
+                    
+                } else {
+                    print("User document does not exist")
                 }
-                self.deleteDatabaseDoc(db: db, collection: "users", docID: uid)
-                // When a user is deleted, we lose permission to access database, this call must be performed AFTER all the docs have been deleted. I have a feeling that for a large number of postings, some of them will fail to delete because the above loop will not complete in time before deleteUser() is called. Will probably have to use some DispatchQueues to prevent this.
-                self.deleteUser()
-                
-            } else {
-                print("User document does not exist")
             }
         }
+        
     }
     
     @IBAction func managePostingsClicke() {
@@ -201,49 +245,69 @@ class SettingsViewController: UIViewController {
         self.navigationController?.pushViewController(UserPostingsVC, animated: true)
     }
     
-    
-    func verifyPassword(textField: UITextField) {
+    // Images for each posting are deleted in parallel.
+    func deleteImagesAndPosting(delete_queue: DispatchQueue, delete_group: DispatchGroup, db: Firestore, storage: StorageReference, postingID: String) {
         
-        guard let enteredPasword = textField.text else {
-            print("error unwrapping entered password for authorizing account delete")
-            return
-        }
-        
-        Auth.auth().signIn(withEmail: LoggedInUser.username + "@bikemarketplace.com", password: enteredPasword) { authResult, error in
-            if error != nil {
-                print("wrongpassword")
-                self.showWrongPasswordAlert()
-                self.enableUI()
-            } else {
-                self.deleteUserThenTransition()
+        DispatchQueue.global(qos: .userInitiated).async {
+            let image_group = DispatchGroup()
+            let image_queue = DispatchQueue(label: "image deletion queue")
+            
+            image_queue.async {
+                let posting = db.collection("postings").document(postingID)
+                
+                posting.getDocument { (document, error) in
+                    if let document = document, document.exists {
+                        let posting_images = document.get("image_ID")
+                        
+                        // Delete posting doc since we already got the image IDs
+                        delete_group.enter()
+                        self.deleteDatabaseDoc(group: delete_group, db: db, collection: "postings", docID: postingID)
+                        
+                        for imageID in posting_images as! [String] {
+                            image_group.enter()
+                            // Important to note that there is no directory in Storage, the name of the folder that the image is stored in is simply part of the image's name
+                            // "postingID/imageID" is the name of the image file
+                            self.deleteImage(group: image_group, storage: storage, imageID: postingID + "/" + imageID)
+                        }
+                        // After all images associated with the posting have been deleted, the posting doc is deleted from database
+                        image_group.notify(queue: image_queue) {
+                            delete_group.leave()
+                        }
+                    } else {
+                        print("Posting document does not exist")
+                        delete_group.leave()
+                    }
+                }
             }
         }
     }
     
-    func showWrongPasswordAlert() {
-        let alert = UIAlertController(title: "Unable to Delete Account", message: "You've entered the wrong password.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        self.present(alert, animated: true)
-    }
-    
-    func deleteDatabaseDoc(db: Firestore, collection: String, docID: String) {
-        db.collection(collection).document(docID).delete() { error in
-            if let error = error {
-                print("Error removing document: \(error)")
-            } else {
-                print("Document successfully removed!")
+    func deleteImage(group: DispatchGroup, storage: StorageReference, imageID: String) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            let imageRef = storage.child(imageID)
+            
+            imageRef.delete { error in
+                if let error = error {
+                    print("error deleting image file from storage")
+                } else {
+                    print("image file deleted successfully")
+                }
+                group.leave()
             }
         }
     }
-
-    func enableUI(){
-        self.mainView.isUserInteractionEnabled = true
-        //activityIndicator.isHidden = true
-    }
     
-    func disableUI(){
-        self.mainView.isUserInteractionEnabled = false
-        //activityIndicator.isHidden = false
+    func deleteDatabaseDoc(group: DispatchGroup, db: Firestore, collection: String, docID: String) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            db.collection(collection).document(docID).delete() { error in
+                if let error = error {
+                    print("Error removing document: \(error)")
+                } else {
+                    print("Document successfully removed!")
+                }
+                group.leave()
+            }
+        }
     }
     
     func deleteUser() {
@@ -256,6 +320,18 @@ class SettingsViewController: UIViewController {
             self.enableUI()
           }
         }
+    }
+
+    func enableUI(){
+        self.navigationController?.navigationBar.isUserInteractionEnabled = true
+        self.mainView.isUserInteractionEnabled = true
+        //activityIndicator.isHidden = true
+    }
+    
+    func disableUI(){
+        self.navigationController?.navigationBar.isUserInteractionEnabled = false
+        self.mainView.isUserInteractionEnabled = false
+        //activityIndicator.isHidden = false
     }
     
     func goToLogin() {

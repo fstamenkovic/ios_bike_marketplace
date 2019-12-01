@@ -9,11 +9,12 @@
 import UIKit
 import Firebase
 import FirebaseAuth
+import FirebaseStorage
 
 class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     var user_postings: [Posting] = []
-    var posting_uids: [String] = []
+    var posting_ids: [String] = []
     var current_user: User?
     
     @IBOutlet weak var table: UITableView!
@@ -52,7 +53,7 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
                 }
                 
                 self.user_postings.removeAll()
-                self.posting_uids.removeAll()
+                self.posting_ids.removeAll()
                 // fills in the postings array
                 for document in documents{
                     let docID = document.documentID
@@ -61,7 +62,7 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
                     if current_user.user_postings.contains(docID) {
                         let posting = self.load_posting(data: document.data())
                         self.user_postings.append(posting)
-                        self.posting_uids.append(docID)
+                        self.posting_ids.append(docID)
                     }
                 }
                 
@@ -82,6 +83,91 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
         let posting = Posting(title: title, description: description, bike_color: color, bike_type: category, price: price)
             
         return posting
+    }
+    
+    func deletePostingAndImages(db: Firestore, storage: StorageReference, postingID: String) {
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            let image_group = DispatchGroup()
+            let image_queue = DispatchQueue(label: "image deletion queue")
+            
+            image_queue.async {
+                let posting = db.collection("postings").document(postingID)
+                
+                posting.getDocument { (document, error) in
+                    if let document = document, document.exists {
+                        let posting_images = document.get("image_ID")
+                        
+                        // Delete posting doc since we already got the image IDs
+                        image_group.enter()
+                        self.deleteDatabaseDoc(group: image_group, db: db, collection: "postings", docID: postingID)
+                        
+                        for imageID in posting_images as! [String] {
+                            image_group.enter()
+                            // Important to note that there is no directory in Storage, the name of the folder that the image is stored in is simply part of the image's name
+                            // "postingID/imageID" is the name of the image file
+                            self.deleteImage(group: image_group, storage: storage, imageID: postingID + "/" + imageID)
+                        }
+                        // After all images associated with the posting have been deleted, the posting doc is deleted from database
+                        image_group.notify(queue: image_queue) {
+                            self.removeFromUserPostingsArrayThenUpdateView(db: db, postingID: postingID)
+                        }
+                    } else {
+                        print("Posting document does not exist")
+                        self.enableUI()
+                    }
+                }
+            }
+        }
+    }
+    
+    func removeFromUserPostingsArrayThenUpdateView(db: Firestore, postingID: String) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("error getting uid while removing postingID from user_postings")
+            return
+        }
+        let user = db.collection("users").document(uid)
+        
+        user.updateData([
+            "user_postings" : FieldValue.arrayRemove(["\(postingID)"])
+        ]) { error in
+            if error != nil {
+                print("error removing postingID from user_postings")
+                self.enableUI()
+            } else {
+                print("successfully removed postingID from user_postings")
+                self.loadPostings()
+                
+            }
+        }
+    }
+    
+    func deleteImage(group: DispatchGroup, storage: StorageReference, imageID: String) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            let imageRef = storage.child(imageID)
+            
+            imageRef.delete { error in
+                if let error = error {
+                    print("error deleting image file from storage")
+                } else {
+                    print("image file deleted successfully")
+                }
+                group.leave()
+            }
+        }
+    }
+    
+    func deleteDatabaseDoc(group: DispatchGroup, db: Firestore, collection: String, docID: String) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            db.collection(collection).document(docID).delete() { error in
+                if let error = error {
+                    print("Error removing document: \(error)")
+                } else {
+                    print("Document successfully removed!")
+                }
+                group.leave()
+            }
+        }
     }
     
     func enableUI(){
@@ -125,32 +211,14 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
         
         alert.addAction(UIAlertAction(title: "Confirm", style: .destructive, handler: {(action) -> Void in
             self.user_postings.remove(at: indexPath.row)
-            let uid = self.posting_uids[indexPath.row]
-             let db = Firestore.firestore()
+            let postingID = self.posting_ids[indexPath.row]
+            let db = Firestore.firestore()
+            let storage = StorageReference()
              
              // get a reference to the collection
-            let ref = db.collection("postings").document("\(uid)")
+            let ref = db.collection("postings").document("\(postingID)")
             
-            ref.delete() {error in
-                if error != nil {
-                    print("\(error.debugDescription)")
-                    self.enableUI()
-                } else {
-                    let curr_User = Auth.auth().currentUser
-                    guard let user = curr_User else {
-                        print("could not unwrap user")
-                        return
-                    }
-                    
-                    let user_ref = db.collection("users").document("\(user.uid)")
-                
-                    user_ref.updateData([
-                        "user_postings" : FieldValue.arrayRemove(["\(uid)"])
-                    ])
-                    
-                    self.loadPostings()
-                }
-            }
+            self.deletePostingAndImages(db: db, storage: storage, postingID: postingID)
         }))
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {(action) -> Void in

@@ -45,8 +45,33 @@ class NewPostingViewController: UIViewController {
             print("Could not unwrap the title.")
             return
         }
+        
+        if title == ""{
+            let alert = UIAlertController(title: "Invalid Input", message: "Your posting title is empty.", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Ok.", style: .default, handler: {(action) -> Void in
+                
+            }))
+            
+            self.present(alert, animated: true)
+            
+            return
+        }
+        
         guard let description = posting_description.text else {
             print("Could not unwrap description.")
+            return
+        }
+        
+        if description == ""{
+            let alert = UIAlertController(title: "Invalid Input", message: "Your posting description is empty.", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Ok.", style: .default, handler: {(action) -> Void in
+                
+            }))
+            
+            self.present(alert, animated: true)
+            
             return
         }
         
@@ -65,6 +90,18 @@ class NewPostingViewController: UIViewController {
             return
         }
         
+        if price == "" || Int(price) == nil{
+            let alert = UIAlertController(title: "Invalid Input", message: "Invalid price field.", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Ok.", style: .default, handler: {(action) -> Void in
+                
+            }))
+            
+            self.present(alert, animated: true)
+            
+            return
+        }
+        
         let new_posting = Posting(title: title, description: description, bike_color: bike_color, bike_type: bike_category, price: price)
         
         let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
@@ -75,9 +112,7 @@ class NewPostingViewController: UIViewController {
         newPostingVC.reload_delegate = reload_delegate
         newPostingVC.modalPresentationStyle = .fullScreen
         
-        print("print2")
-        self.present(newPostingVC, animated: true, completion: nil)
-        self.navigationController?.popViewController(animated: true)
+        self.navigationController?.pushViewController(newPostingVC, animated: true)
     }
 }
 

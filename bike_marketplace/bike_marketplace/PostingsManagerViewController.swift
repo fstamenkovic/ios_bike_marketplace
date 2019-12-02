@@ -104,10 +104,9 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
         let current_posting = user_postings[indexPath.row]
         
         cell.title_label.text = current_posting.title
-        cell.color_label.text = current_posting.bike_color
-        cell.category_label.text = current_posting.bike_type
-        cell.price_label.text = current_posting.price
-        cell.description_label.text = current_posting.description
+        cell.color_label.text = "Color: \(current_posting.bike_color)"
+        cell.category_label.text = "Category: \(current_posting.bike_type)"
+        cell.price_label.text = "$ \(current_posting.price)"
         
         return cell
     }

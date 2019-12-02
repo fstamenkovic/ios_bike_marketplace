@@ -30,6 +30,16 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
         // Do any additional setup after loading the view.
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
     @IBAction func logoutClicked() {
         self.signOutUser()
         self.dismiss(animated: true, completion: nil)
@@ -174,10 +184,9 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
         let current_posting = all_postings[indexPath.row]
         
         cell.title_label.text = current_posting.title
-        cell.color_label.text = current_posting.bike_color
-        cell.category_label.text = current_posting.bike_type
-        cell.price_label.text = current_posting.price
-        cell.description_label.text = current_posting.description
+        cell.color_label.text = "Color: \(current_posting.bike_color)"
+        cell.category_label.text = "Category: \(current_posting.bike_type)"
+        cell.price_label.text = "$ \(current_posting.price)"
         
         return cell
     }

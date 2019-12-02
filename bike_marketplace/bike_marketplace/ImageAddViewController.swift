@@ -25,6 +25,12 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
     var newPosting: Posting? = nil
     var image_delegate = UIImagePickerController()
     
+    
+    @IBOutlet weak var browse_button: UIButton!
+    
+    @IBOutlet weak var swipe_label: UILabel!
+    
+    
     // Image support
     @IBOutlet weak var picture: UIImageView!
     var image_arr: [UIImage] = []
@@ -38,6 +44,7 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         enableUI()
+        swipe_label.isHidden = true
         // Do any additional setup after loading the view.
     }
 
@@ -198,7 +205,7 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
                     
                     // have the bike feed reload the table to contain this posting as well
                     self.reload_delegate?.reloadTable()
-                    self.dismiss(animated: true, completion: nil)
+                    self.navigationController?.popToRootViewController(animated: true)
                 }
         }
         
@@ -255,6 +262,11 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
         dismiss(animated: true) { // Dismiss the photo library
             if self.image_arr.count > 0 {
                 self.remove_button.isHidden = false
+                self.swipe_label.isHidden = false
+            }
+            
+            if(self.image_arr.count != 0){
+                self.browse_button.setTitle("Add more images", for: .normal)
             }
         }
     }

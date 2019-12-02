@@ -11,9 +11,7 @@ import UIKit
 class CustomCellTableViewCell: UITableViewCell {
 
     @IBOutlet weak var title_label: UILabel!
-    
-    @IBOutlet weak var description_label: UILabel!
-    
+        
     @IBOutlet weak var price_label: UILabel!
     
     @IBOutlet weak var color_label: UILabel!

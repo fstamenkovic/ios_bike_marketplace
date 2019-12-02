@@ -117,7 +117,8 @@ class ViewListingViewController: UIViewController {
     }
     
     func initUI(){
-        enableUI()
+        activity_indicator.startAnimating()
+        disableUI()
         
         guard let posting_unwrapped = posting else {
             print("posting was nil")
@@ -133,10 +134,86 @@ class ViewListingViewController: UIViewController {
         self.swipe_left.direction = .left   // Enable swipe left function
         self.image.isUserInteractionEnabled = true  // Allow user to interact with UIImage
         
-        if posting?.images.count == 0 {
+       /* if posting?.images.count == 0 {
             image.image = UIImage(named: "no photo")
         } else {
             image.image = posting?.images[0]
+        } */
+        
+        disableUI()
+        loadImages()
+    }
+    
+    // blocking function that loads images
+    func loadImages(){
+        guard let local_posting = posting else {
+            print("could not unwrap posting")
+            return
+        }
+        
+        
+        // Get the unique image names ID's
+        // If the user did not add images then this will return
+        guard let image_names = local_posting.image_ids else {
+            print("loadUpImages (ERROR): unable to unwrap image ID's")
+            return
+        }
+        
+        print("img_names \(image_names)")
+        
+        // This is the refernece for the directory which contains all of the images assosciated with the post (AKA the post's id)
+        let ref = Storage.storage().reference().child(local_posting.doc_id)
+        
+        let image_queue = DispatchQueue(label: "image_queue")
+        let group = DispatchGroup()
+        
+        image_queue.async {
+            
+            var loadingImages: [UIImage] = []
+            
+            for i in 0 ..< image_names.count {
+                // Get the reference for the actual image file (if it exists)
+                // Then obtain the data from that image file
+                let reference = ref.child(image_names[i])
+                
+                group.enter()
+                DispatchQueue.global(qos: .userInitiated).async {
+                    reference.getData(maxSize: 5096 * 1024 * 2){ (data, error) in
+                        // The error will be invoked if the users picture is deleted from the database
+                        if let err = error {
+                            print("loadImages(error): \(err.localizedDescription)")
+                            return
+                        }
+                        
+                        // Get image data, then convert the compressed data into a UIImage object
+                        guard let d = data, let p = UIImage(data: d) else {
+                            print("ERROR: image data unable to be unwrapped")
+                            return
+                        }
+                        
+                        print("appended")
+                        loadingImages.append(p)
+                        group.leave()
+                    } // reference.getData()
+                } // global thread
+            } // for
+            
+            group.wait()
+            
+            DispatchQueue.main.async{
+                print("must happen after")
+                self.posting?.images = loadingImages
+                
+                if self.posting?.images.count == 0 {
+                    self.image.image = UIImage(named: "no photo")
+                } else {
+                    self.image.image = self.posting?.images[0]
+                }
+                
+                self.enableUI()
+                self.image.setNeedsDisplay()
+                print("all set up, \(self.posting?.images.count)")
+            }
         }
     }
 }

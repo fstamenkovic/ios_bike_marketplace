@@ -87,10 +87,6 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
                     self.all_postings.append(posting)
                 }
                 
-                self.loadUpImages(){
-                    print("Images loaded")
-                } // Load up images into the created postings
-                
                 self.table.reloadData()
                 self.enableUI()
             }
@@ -110,48 +106,6 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
 
         return posting
     }
-    
-    /* The Firebase getData() function runs asychronously
-     * It immediatly returns and does not run the completion until the very end
-     * After all of the postings are created then loadUpImages() is run on all of the postings
-     * This way the creation of the posting is not dependent on the images
-     * The posting already exists and then the images are added to it in the background
-     */
-    func loadUpImages(completion: @escaping () -> Void) {
-        // Loop through all of the created postings
-        for posting in all_postings {
-            // Get the unique image names ID's
-            // If the user did not add images then this will return
-            guard let image_names = posting.image_ids else {
-                print("loadUpImages (ERROR): unable to unwrap image ID's")
-                return
-            }
-            
-            // This is the refernece for the directory which contains all of the images assosciated with the post (AKA the post's id)
-            let ref = Storage.storage().reference().child(posting.doc_id)
-            
-            for i in 0 ..< image_names.count {
-                // Get the reference for the actual image file (if it exists)
-                // Then obtain the data from that image file
-                let reference = ref.child(image_names[i])
-                reference.getData(maxSize: 5096 * 1024 * 2){ (data, error) in
-                    // The error will be invoked if the users picture is deleted from the database
-                    if let err = error {
-                        print("loadImages(error): \(err.localizedDescription)")
-                        return
-                    }
-                    
-                    // Get image data, then convert the compressed data into a UIImage object
-                    guard let d = data, let p = UIImage(data: d) else {
-                        print("ERROR: image data unable to be unwrapped")
-                        return
-                    }
-                    
-                    posting.images.append(p)   // Upload the UIImage into the posting object
-                } // reference.getData()
-            } // for
-        } // for
-    } // loadUpImages()
     
     func signOutUser() {
         let firebaseAuth = Auth.auth()
@@ -243,7 +197,7 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
         
         ViewPostingVC.modalPresentationStyle = .fullScreen
         ViewPostingVC.posting = all_postings[indexPath.row]
-      
+        
         self.navigationController?.pushViewController(ViewPostingVC, animated: true)
     }
     

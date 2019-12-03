@@ -70,6 +70,11 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
         
         for posting in all_postings{
             if posting.bike_color == fav_color && posting.bike_type == fav_category{
+                // skip postings that the user likely already saw.
+                if posting.time_created < LoggedInUser.last_load {
+                    continue
+                }
+                
                 let alert = UIAlertController(title: "We found a bike you might like!", message: "Would you like to view it?", preferredStyle: .alert)
                 
                 alert.addAction(UIAlertAction(title: "No, thanks.", style: .cancel, handler: {(action) -> Void in
@@ -95,6 +100,8 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func loadBikes(){
         disableUI()
+        
+        //print(Int64(NSDate().timeIntervalSince1970 * 1000))
         
         let db = Firestore.firestore()
         
@@ -130,8 +137,24 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
                 self.sortPostings()
                 self.enableUI()
                 self.checkPreferences()
+                self.updateUserTimestamp()
             }
         }
+    }
+    
+    func updateUserTimestamp(){
+        guard let current_user = Auth.auth().currentUser else {
+            print("Could not get current user")
+            return
+        }
+        
+        let db = Firestore.firestore()
+        let userDoc = db.collection("users").document(current_user.uid)
+        let timestamp = Int64(NSDate().timeIntervalSince1970 * 1000)
+        
+        userDoc.updateData([
+            "last_load" : timestamp
+        ])
     }
     
     // arranges the postings according to user preferences
@@ -168,8 +191,9 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
         let price = data["price"] as? String ?? ""
         let description = data["description"] as? String ?? ""
         let image_ids = data["image_ID"] as? [String]? ?? nil
+        let time_created = data["time_created"] as? Int64 ?? 0
         
-        let posting = Posting(title: title, description: description, bike_color: color, bike_type: category, price: price, doc_id: doc_id, image_ids: image_ids)
+        let posting = Posting(title: title, description: description, bike_color: color, bike_type: category, price: price, doc_id: doc_id, image_ids: image_ids, time_created: time_created)
 
         return posting
     }
@@ -203,9 +227,10 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
                     let user_postings = document.get("user_postings") as? Array ?? [""]
                     let fav_color = document.get("fav_color") as? String ?? ""
                     let fav_category = document.get("fav_color") as? String ?? ""
+                    let last_load = document.get("last_load") as? Int64 ?? 0
                     
                     DispatchQueue.main.async{
-                        self.LoggedInUser = User(username: username, phone_number: phone_number, user_postings: user_postings, fav_color: fav_color, fav_category: fav_category)
+                        self.LoggedInUser = User(username: username, phone_number: phone_number, user_postings: user_postings, fav_color: fav_color, fav_category: fav_category, last_load: last_load)
                     }
                     print("left")
                     group.leave()

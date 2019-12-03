@@ -130,8 +130,9 @@ class UserLoginViewController: UIViewController {
                 let user_postings = document.get("user_postings") as? Array ?? [""]
                 let fav_color = document.get("fav_color") as? String ?? ""
                 let fav_category = document.get("fav_category") as? String ?? ""
+                let last_load = document.get("last_load") as? Int64 ?? 0
                 
-                self.ExistingUser = User(username: username, phone_number: phone_number, user_postings: user_postings, fav_color: fav_color, fav_category: fav_category)
+                self.ExistingUser = User(username: username, phone_number: phone_number, user_postings: user_postings, fav_color: fav_color, fav_category: fav_category, last_load: last_load)
                 
                 self.goToBikeFeedView()
                 self.clearTextFields()

@@ -157,6 +157,8 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
             return
         }
         
+        posting.time_created = Int64(NSDate().timeIntervalSince1970 * 1000)
+        
         disableUI() // Prevent user interaction
         
         // Create unique names for images
@@ -175,7 +177,8 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
             "description": posting.description,
             "title": posting.title,
             "price": posting.price,
-            "image_ID": FieldValue.arrayUnion(image_name) ]){error in
+            "image_ID": FieldValue.arrayUnion(image_name),
+            "time_created": posting.time_created ]){error in
                 if error != nil {
                     print("there was an error posting this")
                     self.enableUI()

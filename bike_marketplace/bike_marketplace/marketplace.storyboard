@@ -255,7 +255,7 @@
                         <outlet property="category_picker" destination="bkw-Xk-7Lv" id="kUx-QD-HUS"/>
                         <outlet property="color_picker" destination="Ga9-fT-hcw" id="oaf-yd-315"/>
                         <outlet property="posting_description" destination="b44-fN-VF4" id="hKe-O2-dPB"/>
-                        <outlet property="posting_title" destination="b44-fN-VF4" id="p8G-0c-f7A"/>
+                        <outlet property="posting_title" destination="6dX-J7-aAf" id="tdx-17-V1n"/>
                         <outlet property="price" destination="PIb-ZE-B1e" id="vAl-NQ-mkY"/>
                     </connections>
                 </viewController>

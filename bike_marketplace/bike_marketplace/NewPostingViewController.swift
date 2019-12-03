@@ -12,9 +12,11 @@ class NewPostingViewController: UIViewController {
     
     @IBOutlet weak var category_picker: UIPickerView!
     @IBOutlet weak var color_picker: UIPickerView!
-    @IBOutlet weak var posting_title: UITextField!
     @IBOutlet weak var posting_description: UITextField!
     @IBOutlet weak var price: UITextField!
+    @IBOutlet weak var posting_title: UITextField!
+    
+    
     
     // classes that implement picker functionality
     let categoryPickerImplementation = categoryPicker()
@@ -74,6 +76,9 @@ class NewPostingViewController: UIViewController {
             
             return
         }
+        
+        print(description)
+        print(title)
         
         guard let bike_category = categoryPickerImplementation.getCategory() else{
             print("could not unwrap bike category")

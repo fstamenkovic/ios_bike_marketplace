@@ -29,6 +29,7 @@ class ViewListingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initUI()
+        updateFavorites()
         // Do any additional setup after loading the view.
     }
     
@@ -134,12 +135,6 @@ class ViewListingViewController: UIViewController {
         self.swipe_left.direction = .left   // Enable swipe left function
         self.image.isUserInteractionEnabled = true  // Allow user to interact with UIImage
         
-       /* if posting?.images.count == 0 {
-            image.image = UIImage(named: "no photo")
-        } else {
-            image.image = posting?.images[0]
-        } */
-        
         disableUI()
         loadImages()
     }
@@ -215,5 +210,28 @@ class ViewListingViewController: UIViewController {
                 print("all set up, \(self.posting?.images.count)")
             }
         }
+    }
+    
+    func updateFavorites(){
+        let user = Auth.auth().currentUser
+        
+        guard let user_unwrapped = user else{
+            print("Could not unwrap user")
+            return
+        }
+        
+        let db = Firestore.firestore()
+        let userDoc = db.collection("users").document(user_unwrapped.uid)
+        
+        let new_fav_color = posting?.bike_color ?? ""
+        let new_fav_category = posting?.bike_type ?? ""
+        
+        // do not update if categories wrong
+        if new_fav_color == "" || new_fav_category == "" {
+            return
+        }
+        
+        userDoc.updateData(["fav_color" : new_fav_color ])
+        userDoc.updateData(["fav_category": new_fav_category])
     }
 }

@@ -103,7 +103,9 @@ class PhoneEntryViewController: UIViewController {
         db.collection("users").document(uid).setData([
             "username" : self.NewUser.username,
             "phone_number" : self.NewUser.phone_number,
-            "user_postings": self.NewUser.user_postings
+            "user_postings": self.NewUser.user_postings,
+            "fav_color": "",
+            "fav_category": ""
         ]) { error in
             if let error = error {
                 print("error adding document containing username and phonenumber to users collection")

@@ -98,9 +98,36 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
                 }
                 
                 self.table.reloadData()
+                self.sortPostings()
                 self.enableUI()
             }
         }
+    }
+    
+    // arranges the postings according to user preferences
+    func sortPostings(){
+        var sorted_arr: [Posting] = []
+        
+        let fav_color = LoggedInUser.fav_color
+        let fav_category = LoggedInUser.fav_category
+        var top_index = 0
+        
+        for posting in all_postings {
+            if posting.bike_color == fav_color && posting.bike_type == fav_category{
+                sorted_arr.insert(posting, at: top_index)
+                top_index += 1
+            } else if posting.bike_type == fav_category{
+                sorted_arr.insert(posting, at: top_index)
+                top_index += 1
+            } else if posting.bike_color == fav_color{
+                sorted_arr.insert(posting, at: top_index)
+                top_index += 1
+            } else {
+                sorted_arr.append(posting)
+            }
+        }
+        
+        all_postings = sorted_arr
     }
     
     // Initializes one Posting
@@ -144,9 +171,11 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
                     let username = document.get("username") as? String ?? ""
                     let phone_number = document.get("phone_number") as? String ?? ""
                     let user_postings = document.get("user_postings") as? Array ?? [""]
+                    let fav_color = document.get("fav_color") as? String ?? ""
+                    let fav_category = document.get("fav_color") as? String ?? ""
                     
                     DispatchQueue.main.async{
-                        self.LoggedInUser = User(username: username, phone_number: phone_number, user_postings: user_postings)
+                        self.LoggedInUser = User(username: username, phone_number: phone_number, user_postings: user_postings, fav_color: fav_color, fav_category: fav_category)
                     }
                     print("left")
                     group.leave()

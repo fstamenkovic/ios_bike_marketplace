@@ -16,17 +16,23 @@ class User {
     var username: String
     var phone_number: String
     var user_postings: [String]
+    var fav_color: String
+    var fav_category: String
     
     init() {
         self.username = ""
         self.phone_number = ""
         self.user_postings = [String]()
+        self.fav_category = ""
+        self.fav_color = ""
     }
     
-    init(username: String, phone_number: String, user_postings: [String]) {
+    init(username: String, phone_number: String, user_postings: [String], fav_color: String, fav_category: String) {
         self.username = username
         self.phone_number = phone_number
         self.user_postings = user_postings
+        self.fav_color = fav_color
+        self.fav_category = fav_category
     }
 }
 

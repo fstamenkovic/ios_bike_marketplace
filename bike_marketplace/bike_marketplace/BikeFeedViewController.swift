@@ -64,6 +64,35 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
         self.navigationController?.pushViewController(settingsVC, animated: true)
     }
     
+    func checkPreferences(){
+        let fav_color = LoggedInUser.fav_color
+        let fav_category = LoggedInUser.fav_category
+        
+        for posting in all_postings{
+            if posting.bike_color == fav_color && posting.bike_type == fav_category{
+                let alert = UIAlertController(title: "We found a bike you might like!", message: "Would you like to view it?", preferredStyle: .alert)
+                
+                alert.addAction(UIAlertAction(title: "No, thanks.", style: .cancel, handler: {(action) -> Void in
+                    
+                }))
+                
+                alert.addAction(UIAlertAction(title: "Sure!", style: .default, handler: {(action) -> Void in
+                    
+                    // instantiate a ViewPostingViewController, pass information and display
+                    let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
+                    let ViewPostingVC = storyboard.instantiateViewController(identifier: "viewListingViewController") as! ViewListingViewController
+                    
+                    ViewPostingVC.modalPresentationStyle = .fullScreen
+                    ViewPostingVC.posting = posting
+                    
+                    self.navigationController?.pushViewController(ViewPostingVC, animated: true)
+                }))
+                
+                self.present(alert, animated: true)
+            }
+        }
+    }
+    
     func loadBikes(){
         disableUI()
         
@@ -100,6 +129,7 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
                 self.table.reloadData()
                 self.sortPostings()
                 self.enableUI()
+                self.checkPreferences()
             }
         }
     }

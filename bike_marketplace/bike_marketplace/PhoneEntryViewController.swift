@@ -41,7 +41,7 @@ class PhoneEntryViewController: UIViewController {
         do {
             let parsedPhoneNumber = try phoneNumberKit.parse(userInputPhoneNumber)
             
-            self.NewUser.phone_number = phoneNumberKit.format(parsedPhoneNumber, toType: .national)
+            self.NewUser.phone_number = phoneNumberKit.format(parsedPhoneNumber, toType: .e164)
             
             createUserAccountThenTransition(username: self.NewUser.username, password: self.password, phoneNumber: self.NewUser.phone_number)
         }

@@ -10,6 +10,8 @@ import UIKit
 
 class NewPostingViewController: UIViewController {
     
+    var LoggedInUser: User? = nil
+    
     @IBOutlet weak var category_picker: UIPickerView!
     @IBOutlet weak var color_picker: UIPickerView!
     @IBOutlet weak var posting_description: UITextField!
@@ -115,6 +117,7 @@ class NewPostingViewController: UIViewController {
 
         newPostingVC.newPosting = new_posting
         newPostingVC.reload_delegate = reload_delegate
+        newPostingVC.LoggedInUser = LoggedInUser
         newPostingVC.modalPresentationStyle = .fullScreen
         
         self.navigationController?.pushViewController(newPostingVC, animated: true)

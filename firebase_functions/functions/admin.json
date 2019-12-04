@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "bike-marketplace",
+  "private_key_id": "1eef5dfed250567a8b916ff7f67bd887a30da223",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDTZl9KXHiDiuBm\nmaV83NwINNoIctrtBaPl0DLsEqE5tqLZ7xrwru1eQGNTUHk0zv9X2FO1EL/+vuY6\n3FomfmhbcSvOWSj54YjvwGvQShxY2k0a7B82vTPPVkVXe94h1V00XZ8TuzsCNIyV\n81Ctpg+/5eUSGP1Q8T/cmj2jZeTLS47YzCGgoq7Ro0G4mfvZ8mlsy7RU0qx5PDjx\nwlXSNX9gj3En9flROoTYkbSVu5Ub4IdpggL2psR4R4H/N58D2XF2nM0RAMGMVc7X\nUe9yMrufdRt3V1rDDUcsUtOygPHTHFsn7QyuXWl3yVxJ9sXpGPZolgitoA9bctIw\nMIEoweRzAgMBAAECggEAUdLZhkhFczDRS5Uj6zD3T4vZapS+LSjWN/D+jMZnNhX9\ncZotVMR4ZtdIOqq2x1xplABM4hQCJGGSbmz0zdp2nRIwUPXMuO91V8skT+Inl7Kj\nTozfRgo0oAd13nc40uKpaUfldzcsj110nuOnMhdJGE8s+3TFs8s1GzduLS0WwiKf\n2l3J9cqZlVz1IhH3phsFmDjkdLlVG72XdyWJlZTefeeEJfGIWGvQF/KwHkAyRPr+\nJ5iZmJ4V3DbA8yeKZdZ6ye3zlhqkpx0OWQUsi9Zjk7zRYc/zVs3HphrQCRwUD4Dc\nQnC1XzFam8qipJ2jH3oErcyJ2GJpGpDkWGkA3sbM/QKBgQD2ngFRKa0EthOsaU+I\n25bm6bEe646LKoDfhWVz5Jro7uxBaj3FLxiEarOw18vpOIo9Equsiswh7IEzzrqO\n2UM160UqPm8as89qnJbcgKfrglqVICzcAJl7OMw5BJt4xO7mrLeUmhTZ/a88OeEi\n2maedkI/hl5h1qpvj142fhhGVwKBgQDbcVvIiBHxlHaV1EXTJ6rkURfC2CzDfwPm\nI69VDpr3I1u+jI8xEiPvJNachq8h8CGSvRo8JkXHBUwCIGWX83mzeqmslLuOb4KR\nKJCZ1ru9dQ6QgcVybK3FXMGJC1E9NrfW77EO5p/t6W9iMD68AkRRhRGM2BJdy/jd\nAu7PGMUpRQKBgHcaeiJbkU7cLIYw2hOLkcZ1iHAZbV8yqMjKoOOmvVXPxdQV3j0z\n8JBLA/tdTQKWptS2Bqku40Vi9kcyCRFiRj5tIJs1Se1Id9zSQV2+2No5u0uYHXIm\n6/kBxkenPPrHiWVodsTS4U0iYpYgkeWGOtc+3+HUIBL6XJfCUsrYfRrDAoGAP/6G\n7awAz5qkGn2U/0cKJxse+stgAoL/+BVgBEYGGxxMnP0QpRbNM+hiTbNZT2Rf5hMP\nm4rtvmRlDhm0huOSEi0rXhDhwV/zi7FwuexNQ6rnXGz7z6qx4mRybCzIvDlA04WC\n9P18lj0FJnU7Vkiy87MCszgv4vqg0JMSYYKvvKECgYEA1VaYF77xqhu9YoLJlAKb\n6QkSxTsiD1Lk8dZB0FWHL2ldjp9OHt/Rxvn2yYxGZhULTlYAjBEU6iJhATy90tXE\nd4sj4WkJdP9cGw9nnHNbkDeVAIxg9I3BsbYThTRWTpB8ykTq6poxpv2nT/9jLsV4\naQLqGJijnIrp8Gd3ATuCz/c=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-4sh2e@bike-marketplace.iam.gserviceaccount.com",
+  "client_id": "104524050508328925906",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-4sh2e%40bike-marketplace.iam.gserviceaccount.com"
+}

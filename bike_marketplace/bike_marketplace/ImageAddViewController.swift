@@ -158,9 +158,9 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
             return
         }
         
-        //let functions = Functions.functions()
+        let functions = Functions.functions()
         
-        //functions.httpsCallable("update_user").call(["bike_type": posting.bike_type, "bike_color": posting.bike_color], completion: {(data, err) -> Void in
+        functions.httpsCallable("update_user").call(["bike_type": posting.bike_type, "bike_color": posting.bike_color], completion: {(data, err) -> Void in
             
         })
         

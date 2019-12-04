@@ -11,6 +11,7 @@ import UIKit
 import Firebase
 import FirebaseAuth
 import FirebaseStorage
+import FirebaseFunctions
 
 // make the bike feed implement this protocol. this protocol allows this
 // this View Controller to reload all postings on the bike feed
@@ -156,6 +157,12 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
             print("could not retreive the posting")
             return
         }
+        
+        //let functions = Functions.functions()
+        
+        //functions.httpsCallable("update_user").call(["bike_type": posting.bike_type, "bike_color": posting.bike_color], completion: {(data, err) -> Void in
+            
+        })
         
         posting.time_created = Int64(NSDate().timeIntervalSince1970 * 1000)
         

@@ -51,6 +51,7 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
         let newPostingVC = storyboard.instantiateViewController(identifier: "newPostingViewController") as! NewPostingViewController
 
         newPostingVC.reload_delegate = self
+        newPostingVC.LoggedInUser = LoggedInUser
         self.navigationController?.pushViewController(newPostingVC, animated: true)
     }
     

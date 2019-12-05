@@ -36,8 +36,9 @@ class ViewListingViewController: UIViewController {
     
     
     @IBAction func contactPressed() {
-        // TODO: Enable Firebase to store the posting user
-        let alert = UIAlertController(title: "Contact Info", message: "Mike, +15109271241", preferredStyle: .alert)
+        let seller_number = posting?.poster_number ?? ""
+        
+        let alert = UIAlertController(title: "Contact Info", message: "Contact the seller at \(seller_number)!", preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Dimiss", style: .default, handler: nil))
      

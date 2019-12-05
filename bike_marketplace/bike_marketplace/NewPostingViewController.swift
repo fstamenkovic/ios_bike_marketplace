@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PhoneNumberKit
 
 class NewPostingViewController: UIViewController {
     
@@ -108,8 +109,20 @@ class NewPostingViewController: UIViewController {
             
             return
         }
+        let phonenumkit = PhoneNumberKit()
         
-        let new_posting = Posting(title: title, description: description, bike_color: bike_color, bike_type: bike_category, price: price)
+        var user_phone = ""
+        
+        do{
+            let phone_num = try phonenumkit.parse(LoggedInUser?.phone_number ?? "")
+            
+            user_phone = phonenumkit.format(phone_num, toType: .national)
+        }
+        catch{
+            print("There was en error with parsing")
+        }
+        
+        let new_posting = Posting(title: title, description: description, bike_color: bike_color, bike_type: bike_category, price: price, poster_number: user_phone)
         
         let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
         print("print")

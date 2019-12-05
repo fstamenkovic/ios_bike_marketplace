@@ -45,6 +45,7 @@ class Posting {
     var bike_color: String = ""
     var bike_type: String = ""
     var price: String = ""
+    var poster_number: String = ""
     
     // Metadata
     var doc_id: String = "" // Holds the directory title of the images (same as the post ID)
@@ -52,21 +53,23 @@ class Posting {
     var images: [UIImage] = []  // Holds the individual image files themselves
     var time_created: Int64
     
-    init(title: String, description:String, bike_color:String, bike_type:String, price: String){
+    init(title: String, description:String, bike_color:String, bike_type:String, price: String, poster_number: String){
         self.title = title
         self.description = description
         self.bike_color = bike_color
         self.bike_type = bike_type
         self.price = price
+        self.poster_number = poster_number
         self.time_created = 0
     }
     
-    init(title: String, description:String, bike_color:String, bike_type:String, price: String, doc_id: String, image_ids: [String]?, time_created: Int64){
+    init(title: String, description:String, bike_color:String, bike_type:String, price: String, poster_number: String, doc_id: String, image_ids: [String]?, time_created: Int64){
         self.title = title
         self.description = description
         self.bike_color = bike_color
         self.bike_type = bike_type
         self.price = price
+        self.poster_number = poster_number
         self.doc_id = doc_id
         self.image_ids = image_ids
         self.time_created = time_created

@@ -185,6 +185,7 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
             "description": posting.description,
             "title": posting.title,
             "price": posting.price,
+            "poster_number": posting.poster_number,
             "image_ID": FieldValue.arrayUnion(image_name),
             "time_created": posting.time_created ]){error in
                 if error != nil {

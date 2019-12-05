@@ -319,26 +319,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ygt-n5-wQT">
                                 <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gbV-Rc-dHr">
-                                        <rect key="frame" x="118" y="104" width="178" height="39"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                        <state key="normal" title="Change Username"/>
-                                        <connections>
-                                            <action selector="changeUsernameClicked" destination="Ur1-OR-8Cj" eventType="touchUpInside" id="2Zs-xU-A8D"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dzg-sv-WtK">
-                                        <rect key="frame" x="121" y="173" width="172" height="39"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                        <state key="normal" title="Change Password">
-                                            <color key="titleColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="changePasswordClicked" destination="Ur1-OR-8Cj" eventType="touchUpInside" id="lQm-J8-xnd"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CNY-KZ-9aA">
-                                        <rect key="frame" x="133.5" y="242" width="147" height="39"/>
+                                        <rect key="frame" x="133.5" y="104" width="147" height="39"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                         <state key="normal" title="Delete Account">
                                             <color key="titleColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -360,12 +342,8 @@
                                 <constraints>
                                     <constraint firstItem="CNY-KZ-9aA" firstAttribute="centerX" secondItem="ygt-n5-wQT" secondAttribute="centerX" id="1CN-5x-eyS"/>
                                     <constraint firstItem="ofp-d0-QWE" firstAttribute="centerX" secondItem="ygt-n5-wQT" secondAttribute="centerX" id="GJx-h1-wie"/>
-                                    <constraint firstItem="gbV-Rc-dHr" firstAttribute="top" secondItem="ofp-d0-QWE" secondAttribute="bottom" constant="30" id="KNc-Yk-VIS"/>
-                                    <constraint firstItem="dzg-sv-WtK" firstAttribute="centerX" secondItem="ygt-n5-wQT" secondAttribute="centerX" id="QU3-kh-tdu"/>
-                                    <constraint firstItem="CNY-KZ-9aA" firstAttribute="top" secondItem="dzg-sv-WtK" secondAttribute="bottom" constant="30" id="WgW-vq-Scu"/>
+                                    <constraint firstItem="CNY-KZ-9aA" firstAttribute="top" secondItem="ofp-d0-QWE" secondAttribute="bottom" constant="30" id="Tok-Hw-FHB"/>
                                     <constraint firstItem="ofp-d0-QWE" firstAttribute="top" secondItem="ygt-n5-wQT" secondAttribute="top" constant="35" id="d2h-wM-Dfw"/>
-                                    <constraint firstItem="dzg-sv-WtK" firstAttribute="top" secondItem="gbV-Rc-dHr" secondAttribute="bottom" constant="30" id="w5x-24-Ida"/>
-                                    <constraint firstItem="gbV-Rc-dHr" firstAttribute="centerX" secondItem="ygt-n5-wQT" secondAttribute="centerX" id="xcA-XU-Zaf"/>
                                 </constraints>
                             </view>
                         </subviews>

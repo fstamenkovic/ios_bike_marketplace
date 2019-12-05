@@ -9,15 +9,12 @@
 import UIKit
 
 class PickCategoryViewController: UIViewController {
-
     
     var LoggedInUser: User? = nil
     var reload_delegate: refreshMarkeplace?
     var newPosting: Posting?
     
-    
     @IBOutlet weak var category_picker: UIPickerView!
-    
     @IBOutlet weak var color_picker: UIPickerView!
     
     // classes that implement picker functionality
@@ -34,11 +31,11 @@ class PickCategoryViewController: UIViewController {
 
         // Do any additional setup after loading the view.
     }
-    
-    
-    
+
+    /*
+     * Segue to Add images.
+     */
     @IBAction func addImagesPressed() {
-        
         
         guard let bike_category = categoryPickerImplementation.getCategory() else{
             print("could not unwrap bike category")
@@ -54,20 +51,21 @@ class PickCategoryViewController: UIViewController {
         newPosting?.bike_type = bike_category
         
         let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
-        let newPostingVC = storyboard.instantiateViewController(identifier: "imageAddViewController") as! ImageAddViewController
+        let addImagesVC = storyboard.instantiateViewController(identifier: "imageAddViewController") as! ImageAddViewController
 
-        newPostingVC.newPosting = newPosting
-        newPostingVC.reload_delegate = reload_delegate
-        newPostingVC.LoggedInUser = LoggedInUser
-        newPostingVC.modalPresentationStyle = .fullScreen
+        addImagesVC.newPosting = newPosting
+        addImagesVC.reload_delegate = reload_delegate
+        addImagesVC.LoggedInUser = LoggedInUser
+        addImagesVC.modalPresentationStyle = .fullScreen
         
-        self.navigationController?.pushViewController(newPostingVC, animated: true)
-        
+        self.navigationController?.pushViewController(addImagesVC, animated: true)
     }
-    
 
 }
 
+/*
+ * Implements the delegates for the category picker.
+ */
 class categoryPicker: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource {
     
     let categories = ["Road", "Mountain", "Super cruiser", "Racing", "Unicycle"]
@@ -95,9 +93,11 @@ class categoryPicker: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int){
         current_selection = row
     }
-    
 }
 
+/*
+ * Implements the delegates for the color picker.
+ */
 class colorPicker: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource {
     
     let colors = ["Blue", "Red", "Yellow", "Orange", "Green", "Black", "White", "Pink", "Purple", "Brown"]

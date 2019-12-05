@@ -25,6 +25,9 @@ class ProfileSetupViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    /*
+     * Checks if username is valid. If not, gives an error message.
+     */
     @IBAction func letsGoButtonPressed() {
         self.errorLabel.isHidden = true
         disableUI()
@@ -34,6 +37,7 @@ class ProfileSetupViewController: UIViewController {
             return
         }
         
+        // checks username validity.
         if usernameIsValid(enteredUsername) {
             checkIfUsernameTaken(enteredUsername)
             
@@ -44,12 +48,20 @@ class ProfileSetupViewController: UIViewController {
             self.enableUI()
         }
     }
+    
+    /*
+     * Checks if username is valid.
+     */
     func usernameIsValid(_ username: String) -> Bool {
         
         let usernameTest = NSPredicate(format: "SELF MATCHES %@", "^[a-z0-9]{4,12}$")
         
         return usernameTest.evaluate(with: username)
     }
+    
+    /*
+     * Uses Firebase Authentication to check if username is available.
+     */
     func checkIfUsernameTaken(_ username: String) {
         Auth.auth().fetchSignInMethods(forEmail: username + "@bikemarketplace.com") { (signInMethods, error) in
             
@@ -71,6 +83,9 @@ class ProfileSetupViewController: UIViewController {
         }
     }
     
+    /*
+     * Segues to password entry ViewController.
+     */
     func goToPasswordCreation() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let VC = storyboard.instantiateViewController(identifier: "passwordCreationViewController") as! PasswordCreationViewController

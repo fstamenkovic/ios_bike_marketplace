@@ -13,11 +13,9 @@ import FirebaseStorage
 
 class SettingsViewController: UIViewController {
     
-    var LoggedInUser: User = User()
-
+    var LoggedInUser: User = User() // user currently logged in.
     //view with all the main UIElements
     @IBOutlet weak var mainView: UIView!
-    
     @IBOutlet weak var deleteAccountView: UIView!
     
     
@@ -32,21 +30,16 @@ class SettingsViewController: UIViewController {
         mainView.isUserInteractionEnabled = true
     }
     
-    func disableUserInteraction(){
-        
-    }
-    
-    func enableUserInteraction(){
-        
-    }
-    
     @IBAction func dismissClicked(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
     
+    /*
+     * Propmpt the user for password and delete their account along with associated
+     * postings.
+     */
     @IBAction func deleteAccountClicked(_ sender: Any) {
-        //deleteAccountView.isHidden = false
-        //deleteAccountView.isUserInteractionEnabled = true
+    
         let alert = UIAlertController(title: "Delete Account", message: "Are you sure you want to delete Account?", preferredStyle: .alert)
         
         alert.addTextField(configurationHandler: {(textField) in
@@ -70,6 +63,9 @@ class SettingsViewController: UIViewController {
         self.present(alert, animated: true)
     }
     
+    /*
+     * Checks that the password is correct. If so, delete user.
+     */
     func verifyPassword(textField: UITextField) {
         
         guard let enteredPasword = textField.text else {
@@ -92,12 +88,18 @@ class SettingsViewController: UIViewController {
 
     }
     
+    /*
+     * User put in a wrong password.
+     */
     func showWrongPasswordAlert() {
         let alert = UIAlertController(title: "Unable to Delete Account", message: "You've entered the wrong password.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alert, animated: true)
     }
     
+    /*
+     * Fetch user data, then delete related database entries.
+     */
     func deleteUserThenTransition() {
         let user = Auth.auth().currentUser
         guard let uid = user?.uid else {
@@ -107,12 +109,16 @@ class SettingsViewController: UIViewController {
         self.deleteUserData(uid: uid)
     }
     
-    // Deletes every posting (and its images) associated with the user and then deletes the user's doc in users collection, returns to login view
+    /*
+     * Deletes every posting (and its images) associated with the user and
+     * then deletes the user's doc in users collection, returns to login view
+     */
     func deleteUserData(uid: String) {
         
         let delete_group = DispatchGroup()
         let delete_queue = DispatchQueue(label: "user deletion queue")
         
+        // put deletion to a separate thread.
         delete_queue.async {
             let db = Firestore.firestore()
             let storage = StorageReference()
@@ -145,16 +151,9 @@ class SettingsViewController: UIViewController {
         
     }
     
-    @IBAction func managePostingsClicke() {
-        let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
-        let UserPostingsVC = storyboard.instantiateViewController(identifier: "postingsManagerViewController") as! PostingsManagerViewController
-        
-        UserPostingsVC.current_user = LoggedInUser
-        UserPostingsVC.modalPresentationStyle = .fullScreen
-        self.navigationController?.pushViewController(UserPostingsVC, animated: true)
-    }
-    
-    // Images for each posting are deleted in parallel.
+    /*
+     * Deletes Images from Firebase Storage in parallel.
+     */
     func deleteImagesAndPosting(delete_queue: DispatchQueue, delete_group: DispatchGroup, db: Firestore, storage: StorageReference, postingID: String) {
         
         DispatchQueue.global(qos: .userInitiated).async {
@@ -191,12 +190,15 @@ class SettingsViewController: UIViewController {
         }
     }
     
+    /*
+     * Deletes a single images from Firebase Storage.
+     */
     func deleteImage(group: DispatchGroup, storage: StorageReference, imageID: String) {
         DispatchQueue.global(qos: .userInitiated).async {
             let imageRef = storage.child(imageID)
             
             imageRef.delete { error in
-                if let error = error {
+                if error != nil {
                     print("error deleting image file from storage")
                 } else {
                     print("image file deleted successfully")
@@ -206,6 +208,9 @@ class SettingsViewController: UIViewController {
         }
     }
     
+    /*
+     * Deletes Firebase database refference to a single posting.
+     */
     func deleteDatabaseDoc(group: DispatchGroup, db: Firestore, collection: String, docID: String) {
         DispatchQueue.global(qos: .userInitiated).async {
             db.collection(collection).document(docID).delete() { error in
@@ -219,10 +224,13 @@ class SettingsViewController: UIViewController {
         }
     }
     
+    /*
+     * Deletes user by calling a Firebase Authentication function, transitions to login.
+     */
     func deleteUser() {
         let user = Auth.auth().currentUser
         user?.delete { error in
-          if let error = error {
+          if error != nil {
             print("Error while calling Firebase user.delete")
           } else {
             self.goToLogin()
@@ -243,8 +251,19 @@ class SettingsViewController: UIViewController {
         //activityIndicator.isHidden = false
     }
     
+    /*
+     * Dismisses the marketplace navigation controller which takes user back to login.
+     */
     func goToLogin() {
-       
-        self.navigationController?.dismiss(animated: true, completion: nil) //self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+        self.navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func managePostingsClicke() {
+        let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
+        let ManagePostingsVC = storyboard.instantiateViewController(identifier: "postingsManagerViewController") as! PostingsManagerViewController
+        
+        ManagePostingsVC.current_user = LoggedInUser
+        ManagePostingsVC.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(ManagePostingsVC, animated: true)
     }
 }

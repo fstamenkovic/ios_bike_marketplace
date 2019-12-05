@@ -22,19 +22,16 @@ protocol refreshMarkeplace{
 // Import: UIImagePickerControllerDelegate to support pictures
 class ImageAddViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
 
-    // posting to be passed in from NewPostingViewController
-    var newPosting: Posting? = nil
+    var newPosting: Posting? = nil // posting to be passed in from PickCategoryViewController
     var image_delegate = UIImagePickerController()
-    var LoggedInUser: User? = nil
+    var LoggedInUser: User? = nil // current user
     
     @IBOutlet weak var browse_button: UIButton!
-    
     @IBOutlet weak var swipe_label: UILabel!
     
-    
-    // Image support
+    // image support
     @IBOutlet weak var picture: UIImageView!
-    var image_arr: [UIImage] = []
+    var image_arr: [UIImage] = [] // array of loaded images
     @IBOutlet weak var remove_button: UIButton!
     @IBOutlet var swipe_right: UISwipeGestureRecognizer!
     @IBOutlet var swipe_left: UISwipeGestureRecognizer!
@@ -63,6 +60,7 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
             
         activity_indicator.startAnimating()
         activity_indicator.isHidden = false
+        
         present(image_delegate, animated: true) {
             self.activity_indicator.stopAnimating()
             self.view.isUserInteractionEnabled = true
@@ -150,9 +148,11 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
         picture.image = image_arr[i]
     }
     
-    // This puts in the post data from the NewPostingViewController
+    /*
+     * Posts the Posting on the database, then goes to bike feed.
+     */
     @IBAction func postClicked() {
-       // Makes sure that there is post data passed in from NewPostingViewController
+        
         guard let posting = newPosting else {
             print("could not retreive the posting")
             return
@@ -161,10 +161,13 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
         let username = LoggedInUser?.username ?? ""
         let functions = Functions.functions()
         
+        // calls custom Firebase Function to send SMS messages to users who would
+        // be interested in this Posting.
         functions.httpsCallable("update_user").call(["bike_type": posting.bike_type, "bike_color": posting.bike_color, "username": username], completion: {(data, err) -> Void in
             
         })
         
+        // Logs the creation time of this posting.
         posting.time_created = Int64(NSDate().timeIntervalSince1970 * 1000)
         
         disableUI() // Prevent user interaction
@@ -174,11 +177,13 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
         for _ in image_arr {
             image_name.append(UUID().uuidString)
         }
+        
         let db = Firestore.firestore()
         let ref = db.collection("postings")
         
         var document_ref: DocumentReference? = nil
         
+        // Update Firebase database with this posting.
         document_ref = ref.addDocument(data: [
             "category": posting.bike_type,
             "color": posting.bike_color,
@@ -210,12 +215,13 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
                     
                     self.uploadPics(image_names: image_name, ref: directory_ref)    // Load photos onto Firebase storage
                     
+                    // update current user's data to show that they won this post.
                     let ref_user = db.collection("users").document("\(user_uid)")
                     ref_user.updateData([
                         "user_postings" : FieldValue.arrayUnion(["\(document_ref!.documentID)"])
                     ])
                     
-                    // have the bike feed reload the table to contain this posting as well
+                    // have the bike feed reload the table
                     self.reload_delegate?.reloadTable()
                     self.navigationController?.popToRootViewController(animated: true)
                 }
@@ -223,7 +229,9 @@ class ImageAddViewController: UIViewController, UINavigationControllerDelegate, 
         
     }
     
-    
+    /*
+     * Uploads the Posting pictures to Firebase Storage.
+     */
     func uploadPics(image_names: [String], ref: StorageReference) {
         // Iterate through all of the photos in the image_arr array
         for i in 0 ..< self.image_arr.count {

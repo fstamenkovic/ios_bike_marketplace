@@ -12,9 +12,8 @@ import FirebaseStorage
 
 class ViewListingViewController: UIViewController {
 
-    // posting to be displayed
-    var posting: Posting?
-    var images: [UIImage]? = nil
+    var posting: Posting? // posting to be displayed
+    var images: [UIImage]? = nil // array of images associated with posting.
     
     @IBOutlet weak var posting_name: UILabel!
     @IBOutlet weak var price_label: UILabel!
@@ -119,6 +118,9 @@ class ViewListingViewController: UIViewController {
         activity_indicator.isHidden = false
     }
     
+    /*
+     * Sets up the UI regarding the posting.
+     */
     func initUI(){
         activity_indicator.startAnimating()
         disableUI()
@@ -141,13 +143,15 @@ class ViewListingViewController: UIViewController {
         loadImages()
     }
     
-    // blocking function that loads images
+    /*
+     * Loads the posting images from Firebase Storage. Keeps UI disabled while loading
+     * When finished, enables UI.
+     */
     func loadImages(){
         guard let local_posting = posting else {
             print("could not unwrap posting")
             return
         }
-        
         
         // Get the unique image names ID's
         // If the user did not add images then this will return
@@ -155,15 +159,14 @@ class ViewListingViewController: UIViewController {
             print("loadUpImages (ERROR): unable to unwrap image ID's")
             return
         }
-        
-        print("img_names \(image_names)")
-        
+                
         // This is the refernece for the directory which contains all of the images assosciated with the post (AKA the post's id)
         let ref = Storage.storage().reference().child(local_posting.doc_id)
         
         let image_queue = DispatchQueue(label: "image_queue")
         let group = DispatchGroup()
         
+        // Post image loading to a separate thread.
         image_queue.async {
             
             var loadingImages: [UIImage] = []
@@ -174,6 +177,7 @@ class ViewListingViewController: UIViewController {
                 let reference = ref.child(image_names[i])
                 
                 group.enter()
+                // dispatch image retreival from Firebase on a global thread.
                 DispatchQueue.global(qos: .userInitiated).async {
                     reference.getData(maxSize: 5096 * 1024 * 2){ (data, error) in
                         // The error will be invoked if the users picture is deleted from the database
@@ -188,19 +192,21 @@ class ViewListingViewController: UIViewController {
                             return
                         }
                         
-                        print("appended")
                         loadingImages.append(p)
                         group.leave()
                     } // reference.getData()
                 } // global thread
             } // for
             
+            // wait for all images to load.
             group.wait()
             
+            // after all images loaded, update the variables in View Controller from
+            // main thread.
             DispatchQueue.main.async{
-                print("must happen after")
                 self.posting?.images = loadingImages
                 
+                // show the images
                 if self.posting?.images.count == 0 {
                     self.image.image = UIImage(named: "no photo")
                 } else {
@@ -209,11 +215,13 @@ class ViewListingViewController: UIViewController {
                 
                 self.enableUI()
                 self.image.setNeedsDisplay()
-                print("all set up, \(self.posting?.images.count)")
             }
         }
     }
     
+    /*
+     * Invoked when posting viewed. Updates the user preferences on Firebase.
+     */
     func updateFavorites(){
         let user = Auth.auth().currentUser
         
@@ -228,7 +236,7 @@ class ViewListingViewController: UIViewController {
         let new_fav_color = posting?.bike_color ?? ""
         let new_fav_category = posting?.bike_type ?? ""
         
-        // do not update if categories wrong
+        // do not update if the categories were no unwrapped properly.
         if new_fav_color == "" || new_fav_category == "" {
             return
         }

@@ -11,16 +11,15 @@ import PhoneNumberKit
 
 class NewPostingViewController: UIViewController {
     
-    var LoggedInUser: User? = nil
-    
+    var LoggedInUser: User? = nil // current user
     
     @IBOutlet weak var posting_description: UITextView!
-    
     @IBOutlet weak var price: UITextField!
     @IBOutlet weak var posting_title: UITextField!
 
     var reload_delegate: refreshMarkeplace?
     
+    // Delegate implementations for text input fields.
     let description_implementation = descriptionTextFields()
     let title_implementation = titleTextFields()
     
@@ -30,6 +29,11 @@ class NewPostingViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
 
+    /*
+     * Sets up the text fields for title and description.
+     * posting_description is a UITextView, need to configure it to be consistent
+     * with UITextField.
+     */
     func setupTextInput(){
         posting_description.layer.borderColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0).cgColor
         posting_description.layer.borderWidth = 0.5
@@ -47,14 +51,13 @@ class NewPostingViewController: UIViewController {
         view.endEditing(true)
     }
 
-    // proceed to add Images
-    
     @IBAction func addImagesClicked() {
         guard let title = posting_title.text else {
             print("Could not unwrap the title.")
             return
         }
         
+        // check if title is empty, present an error if so.
         if title == ""{
             let alert = UIAlertController(title: "Invalid Input", message: "Your posting title is empty.", preferredStyle: .alert)
             
@@ -72,6 +75,7 @@ class NewPostingViewController: UIViewController {
             return
         }
         
+        // check if description is empty, present error if so.
         if description == ""{
             let alert = UIAlertController(title: "Invalid Input", message: "Your posting description is empty.", preferredStyle: .alert)
             
@@ -89,6 +93,7 @@ class NewPostingViewController: UIViewController {
             return
         }
         
+        // check if price is empty or somehow not an Int. If so, present error.
         if price == "" || Int(price) == nil{
             let alert = UIAlertController(title: "Invalid Input", message: "Invalid price field.", preferredStyle: .alert)
             
@@ -104,6 +109,7 @@ class NewPostingViewController: UIViewController {
         
         var user_phone = ""
         
+        // convert phone number from .e164 to national since it looks better.
         do{
             let phone_num = try phonenumkit.parse(LoggedInUser?.phone_number ?? "")
             
@@ -113,30 +119,35 @@ class NewPostingViewController: UIViewController {
             print("There was en error with parsing")
         }
         
+        // create a Posting class instance with initializers.
         let new_posting = Posting(title: title, description: description, bike_color: "", bike_type: "", price: price, poster_number: user_phone)
         
         let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
-        let newPostingVC = storyboard.instantiateViewController(identifier: "pickCategoryViewController") as! PickCategoryViewController
+        let pickCategoryVC = storyboard.instantiateViewController(identifier: "pickCategoryViewController") as! PickCategoryViewController
 
-        newPostingVC.newPosting = new_posting
-        newPostingVC.reload_delegate = reload_delegate
-        newPostingVC.LoggedInUser = LoggedInUser
-        newPostingVC.modalPresentationStyle = .fullScreen
+        pickCategoryVC.newPosting = new_posting
+        pickCategoryVC.reload_delegate = reload_delegate
+        pickCategoryVC.LoggedInUser = LoggedInUser
+        pickCategoryVC.modalPresentationStyle = .fullScreen
         
-        self.navigationController?.pushViewController(newPostingVC, animated: true)
+        self.navigationController?.pushViewController(pickCategoryVC, animated: true)
     }
 }
 
 
-
+/*
+ * Delegate implementation for the description TextView.
+ */
 class descriptionTextFields: UITextView, UITextViewDelegate{
     
+    // Limit number of characters to 150.
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
         let numberOfChars = newText.count
         return numberOfChars < 150    // 10 Limit Value
     }
     
+    // Delete placeholder text if there is text in the field.
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.lightGray {
             textView.text = nil
@@ -144,6 +155,7 @@ class descriptionTextFields: UITextView, UITextViewDelegate{
         }
     }
     
+    // Enter placeholder if textView empty.
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = "Enter description"
@@ -152,8 +164,12 @@ class descriptionTextFields: UITextView, UITextViewDelegate{
     }
 }
 
+/*
+ * Delegate implementation for the title textField.
+ */
 class titleTextFields: UITextField, UITextFieldDelegate{
     
+    // limit number of characters to 20.
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 
         let currentCharacterCount = textField.text?.count ?? 0

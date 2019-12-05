@@ -51,7 +51,7 @@ class UserLoginViewController: UIViewController {
             return
         }
         
-        // greatly simplify the login process.
+        // Firebase Authentication call to check if user can be logged in.
         Auth.auth().signIn(withEmail: username + "@bikemarketplace.com", password: passwd) { authResult, error in
             
             if error != nil {
@@ -59,33 +59,9 @@ class UserLoginViewController: UIViewController {
                 self.errorLabel.text = error?.localizedDescription
                 self.errorLabel.isHidden = false
             } else {
-                self.grabUserInfoThenTransition()
+                self.login()
             }
         }
-        
-        /*
-        Auth.auth().signIn(withEmail: username + "@bikemarketplace.com", password: passwd) { [weak self] authResult, error in
-            guard let strongSelf = self else { return }
-            strongSelf.activity_indicator.isHidden = false;
-            
-            if (error != nil) {
-                print(error.debugDescription)
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                    strongSelf.activity_indicator.isHidden = true
-                    strongSelf.errorLabel_textField.text = error?.localizedDescription
-                    strongSelf.errorLabel_textField.isHidden = false
-                    strongSelf.view.isUserInteractionEnabled = true
-                })
-                
-            } else {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
-                    strongSelf.goToBikeFeedView(username: username)
-                    strongSelf.activity_indicator.isHidden = true
-                    strongSelf.view.isUserInteractionEnabled = true
-                })
-            }
-        } */
     }
     
     
@@ -112,7 +88,10 @@ class UserLoginViewController: UIViewController {
         self.activity_indicator.isHidden = false
     }
     
-    func grabUserInfoThenTransition() {
+    /*
+     * Gets user information from Firebase Database and continue to marketplace.
+     */
+    func login() {
         
         let user = Auth.auth().currentUser
         guard let uid = user?.uid else {
@@ -123,6 +102,7 @@ class UserLoginViewController: UIViewController {
         let db = Firestore.firestore()
         let userDoc = db.collection("users").document(uid)
         
+        // Get user info.
         userDoc.getDocument { (document, error) in
             if let document = document {
                 let username = document.get("username") as? String ?? ""
@@ -134,6 +114,7 @@ class UserLoginViewController: UIViewController {
                 
                 self.ExistingUser = User(username: username, phone_number: phone_number, user_postings: user_postings, fav_color: fav_color, fav_category: fav_category, last_load: last_load)
                 
+                // Transition and clear fields.
                 self.goToBikeFeedView()
                 self.clearTextFields()
                 self.enableUI()
@@ -146,7 +127,8 @@ class UserLoginViewController: UIViewController {
         self.password_textField.text = ""
     }
     
-    /* In this case we will present the Navigation Controller of the
+    /*
+     * In this case we will present the Navigation Controller of the
      * "marketplace" storyboard, and we will specify the root View
      * Controller to be the BikeFeedViewController.
      */
@@ -159,6 +141,9 @@ class UserLoginViewController: UIViewController {
         self.present(VC_nav, animated: true, completion: nil)
     }
     
+    /*
+     * Proceeds to let a user sign in.
+     */
     func goToProfileSetupView() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let VC = storyboard.instantiateViewController(identifier: "profileSetupViewController") as! ProfileSetupViewController

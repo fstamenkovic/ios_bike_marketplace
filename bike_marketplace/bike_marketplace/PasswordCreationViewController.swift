@@ -29,6 +29,9 @@ class PasswordCreationViewController: UIViewController, UITextFieldDelegate {
         // Do any additional setup after loading the view.
     }
     
+    /*
+     * Checks user password as user types.
+     */
     @IBAction func passwordFieldChanged() {
         
         guard let enteredPassword = new_password_textField.text else {
@@ -58,6 +61,7 @@ class PasswordCreationViewController: UIViewController, UITextFieldDelegate {
         }
         
     }
+    
     @IBAction func submitButtonPressed(_ sender: Any) {
         errorLabel.isHidden = true
         disableUI()
@@ -68,17 +72,22 @@ class PasswordCreationViewController: UIViewController, UITextFieldDelegate {
         }
         
         self.password = enteredPassword
-        
         self.goToPhoneEntryView()
         self.enableUI()
     }
     
+    /*
+     * Checks whether password is secure.
+     */
     func passwordIsValid(_ password : String) -> Bool {
         
         let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,16}$")
         return passwordTest.evaluate(with: password)
     }
     
+    /*
+     * Segue to the last View Controller.
+     */
     func goToPhoneEntryView() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let VC = storyboard.instantiateViewController(identifier: "phoneEntryViewController") as! PhoneEntryViewController

@@ -27,6 +27,9 @@ class PhoneEntryViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    /*
+     * Checks phone number validity, creates new account.
+     */
     @IBAction func submitButtonPressed() {
         self.disableUI()
         errorLabel.isHidden = true
@@ -38,47 +41,25 @@ class PhoneEntryViewController: UIViewController {
         
         let phoneNumberKit = PhoneNumberKit()
         
+        // Checks if phone number is valid. If so, create account.
         do {
             let parsedPhoneNumber = try phoneNumberKit.parse(userInputPhoneNumber)
             
             self.NewUser.phone_number = phoneNumberKit.format(parsedPhoneNumber, toType: .e164)
             
-            createUserAccountThenTransition(username: self.NewUser.username, password: self.password, phoneNumber: self.NewUser.phone_number)
+            createAccount(username: self.NewUser.username, password: self.password, phoneNumber: self.NewUser.phone_number)
         }
         catch {
-            print("error parsing user input phone number with PhoneNumberKit")
-            
             errorLabel.text = "Please enter a valid number."
             errorLabel.isHidden = false
             self.enableUI()
         }
     }
-  /*  func phoneNumberNotAlreadyInUse(phoneNumber: String) -> Bool {
-        
-        var notAlreadyInUse = false
-        
-        let db = Firestore.firestore()
-        
-        let users = db.collection("users")
-        
-        let userWithSamePhoneNumber = users.whereField("phonenumber", isEqualTo: phoneNumber).getDocuments() { (querySnapshot, error) in
-                if let error = error {
-                    print("Error searching for users with same phone number: \(error)")
-                } else {
-                    for document in querySnapshot!.documents {
-                        print("\(document.documentID) => \(document.data())")
-                    }
-
-                   print("phone number is already in use, enter a different number")
-                    self.errorLabel_textField.text = "This phone number is already in use."
-                    self.errorLabel_textField.isHidden = false
-                    notAlreadyInUse = true
-                }
-        }
-        
-        return notAlreadyInUse
-    } */
-    func createUserAccountThenTransition(username: String, password: String, phoneNumber: String) {
+  
+    /*
+     * Creates account and takes user to the marketplace.
+     */
+    func createAccount(username: String, password: String, phoneNumber: String) {
         
         // Adds username and password to Authentication tab in Firebase, this function generates the uid
         Auth.auth().createUser(withEmail: username + "@bikemarketplace.com", password: password) { authResult, error in
@@ -92,11 +73,16 @@ class PhoneEntryViewController: UIViewController {
                     return
                 }
                 
-                self.initializeUserInfoInDatabase(uid: uid)
+                // initialize user info in database.
+                self.initUser(uid: uid)
             }
         }
     }
-    func initializeUserInfoInDatabase(uid: String) {
+    
+    /*
+     * Creates a document for the user in the Firebase Database.
+     */
+    func initUser(uid: String) {
         
         let db = Firestore.firestore()
         
@@ -107,7 +93,7 @@ class PhoneEntryViewController: UIViewController {
             "fav_color": "",
             "fav_category": ""
         ]) { error in
-            if let error = error {
+            if error != nil {
                 print("error adding document containing username and phonenumber to users collection")
             } else {
                 print("User document initialized")
@@ -117,7 +103,8 @@ class PhoneEntryViewController: UIViewController {
         }
     }
     
-    /* In this case we will present the Navigation Controller of the
+    /*
+    * In this case we will present the Navigation Controller of the
     * "marketplace" storyboard, and we will specify the root View
     * Controller to be the BikeFeedViewController.
     */

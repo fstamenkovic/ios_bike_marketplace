@@ -13,12 +13,11 @@ import FirebaseStorage
 
 class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    var user_postings: [Posting] = []
-    var posting_ids: [String] = []
-    var current_user: User?
+    var user_postings: [Posting] = [] // an array of postings
+    var posting_ids: [String] = [] // postings respective document ID's for Firebase
+    var current_user: User? // user currently logged in
     
     @IBOutlet weak var table: UITableView!
-    
     @IBOutlet weak var activity_indicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
@@ -31,6 +30,10 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
         // Do any additional setup after loading the view.
     }
     
+    /*
+     * Gets all postings off Firebase. Loads the user_postings array
+     * only with user's own postings.
+     */
     func loadPostings(){
         let db = Firestore.firestore()
         
@@ -58,7 +61,7 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
                 for document in documents{
                     let docID = document.documentID
                     
-                    // do not show user's own postings on the feed.
+                    // only add to user_pustings if posting is user's own posting.
                     if current_user.user_postings.contains(docID) {
                         let posting = self.load_posting(data: document.data())
                         self.user_postings.append(posting)
@@ -72,7 +75,9 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
-    // Initializes one Posting
+    /*
+     * Initializes one posting from dictionary.
+     */
     func load_posting(data: [String : Any]) -> Posting {
         let color = data["color"] as? String ?? ""
         let category = data["category"] as? String ?? ""
@@ -86,6 +91,9 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
         return posting
     }
     
+    /*
+     * Deletes a single posting and associated images.
+     */
     func deletePostingAndImages(db: Firestore, storage: StorageReference, postingID: String) {
         
         DispatchQueue.global(qos: .userInitiated).async {
@@ -148,7 +156,7 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
             let imageRef = storage.child(imageID)
             
             imageRef.delete { error in
-                if let error = error {
+                if error != nil {
                     print("error deleting image file from storage")
                 } else {
                     print("image file deleted successfully")
@@ -215,10 +223,7 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
             let postingID = self.posting_ids[indexPath.row]
             let db = Firestore.firestore()
             let storage = StorageReference()
-             
-             // get a reference to the collection
-            let ref = db.collection("postings").document("\(postingID)")
-            
+                        
             self.deletePostingAndImages(db: db, storage: storage, postingID: postingID)
         }))
         

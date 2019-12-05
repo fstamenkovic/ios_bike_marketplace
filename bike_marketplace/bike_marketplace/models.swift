@@ -11,7 +11,6 @@
 import Foundation
 import UIKit    // Support UIImage
 
-// Firebase already has a class name User, we may need to change the name of this to avoid confusion
 class User {
     var username: String
     var phone_number: String

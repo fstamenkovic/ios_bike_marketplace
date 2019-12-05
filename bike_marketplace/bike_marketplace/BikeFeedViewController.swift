@@ -193,8 +193,9 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
         let description = data["description"] as? String ?? ""
         let image_ids = data["image_ID"] as? [String]? ?? nil
         let time_created = data["time_created"] as? Int64 ?? 0
+        let poster_number = data["poster_number"] as? String ?? ""
         
-        let posting = Posting(title: title, description: description, bike_color: color, bike_type: category, price: price, doc_id: doc_id, image_ids: image_ids, time_created: time_created)
+        let posting = Posting(title: title, description: description, bike_color: color, bike_type: category, price: price, poster_number: poster_number, doc_id: doc_id, image_ids: image_ids, time_created: time_created)
 
         return posting
     }

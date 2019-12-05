@@ -79,8 +79,9 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
         let title = data["title"] as? String ?? ""
         let price = data["price"] as? String ?? ""
         let description = data["description"] as? String ?? ""
+        let poster_number = data["poster_number"] as? String ?? ""
             
-        let posting = Posting(title: title, description: description, bike_color: color, bike_type: category, price: price)
+        let posting = Posting(title: title, description: description, bike_color: color, bike_type: category, price: price, poster_number: poster_number)
             
         return posting
     }

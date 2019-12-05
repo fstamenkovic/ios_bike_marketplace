@@ -246,6 +246,8 @@ class BikeFeedViewController: UIViewController, UITableViewDataSource, UITableVi
         // hardcoded
         // TODO find a way to do dinamically
         table.rowHeight = 150
+        // Sets navigation bar to UCD gold color
+        self.navigationController?.navigationBar.barTintColor = UIColor(red:0.85, green:0.67, blue:0.00, alpha:1.0)
     }
     
     func enableUI(){

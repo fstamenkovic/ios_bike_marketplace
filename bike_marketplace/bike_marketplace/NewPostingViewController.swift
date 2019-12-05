@@ -13,36 +13,40 @@ class NewPostingViewController: UIViewController {
     
     var LoggedInUser: User? = nil
     
-    @IBOutlet weak var category_picker: UIPickerView!
-    @IBOutlet weak var color_picker: UIPickerView!
-    @IBOutlet weak var posting_description: UITextField!
+    
+    @IBOutlet weak var posting_description: UITextView!
+    
     @IBOutlet weak var price: UITextField!
     @IBOutlet weak var posting_title: UITextField!
-    
-    
-    
-    // classes that implement picker functionality
-    let categoryPickerImplementation = categoryPicker()
-    let colorPickerImplementation = colorPicker()
 
     var reload_delegate: refreshMarkeplace?
     
+    let description_implementation = descriptionTextFields()
+    let title_implementation = titleTextFields()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        color_picker.dataSource = colorPickerImplementation
-        category_picker.dataSource = categoryPickerImplementation
-        color_picker.delegate = colorPickerImplementation
-        category_picker.delegate = categoryPickerImplementation
-        
+        setupTextInput()
         // Do any additional setup after loading the view.
     }
 
+    func setupTextInput(){
+        posting_description.layer.borderColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0).cgColor
+        posting_description.layer.borderWidth = 0.5
+        posting_description.layer.cornerRadius = 5
+        posting_description.delegate = description_implementation
+        posting_description.text = "Enter description"
+        posting_description.textColor = UIColor.lightGray
+        
+        posting_title.delegate = title_implementation
+        price.keyboardType = UIKeyboardType.decimalPad
+    }
+    
     
     @IBAction func screenTapped(_ sender: Any) {
         view.endEditing(true)
     }
-    
-    
+
     // proceed to add Images
     
     @IBAction func addImagesClicked() {
@@ -80,19 +84,6 @@ class NewPostingViewController: UIViewController {
             return
         }
         
-        print(description)
-        print(title)
-        
-        guard let bike_category = categoryPickerImplementation.getCategory() else{
-            print("could not unwrap bike category")
-            return
-        }
-        
-        guard let bike_color = colorPickerImplementation.getColor() else {
-            print("could not unwrap bike color")
-            return
-        }
-        
         guard let price = price.text else {
             print("Could not get the price")
             return
@@ -122,11 +113,10 @@ class NewPostingViewController: UIViewController {
             print("There was en error with parsing")
         }
         
-        let new_posting = Posting(title: title, description: description, bike_color: bike_color, bike_type: bike_category, price: price, poster_number: user_phone)
+        let new_posting = Posting(title: title, description: description, bike_color: "", bike_type: "", price: price, poster_number: user_phone)
         
         let storyboard = UIStoryboard(name: "marketplace", bundle: nil)
-        print("print")
-        let newPostingVC = storyboard.instantiateViewController(identifier: "imageAddViewController") as! ImageAddViewController
+        let newPostingVC = storyboard.instantiateViewController(identifier: "pickCategoryViewController") as! PickCategoryViewController
 
         newPostingVC.newPosting = new_posting
         newPostingVC.reload_delegate = reload_delegate
@@ -137,61 +127,40 @@ class NewPostingViewController: UIViewController {
     }
 }
 
-class categoryPicker: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource {
+
+
+class descriptionTextFields: UITextView, UITextViewDelegate{
     
-    let categories = ["Road", "Mountain", "Super cruiser"]
-    var current_selection = 0
-    
-    // getter method
-    func getCategory() -> String? {
-        return categories[current_selection]
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
+        let numberOfChars = newText.count
+        return numberOfChars < 150    // 10 Limit Value
     }
     
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.textColor == UIColor.lightGray {
+            textView.text = nil
+            textView.textColor = UIColor.black
+        }
     }
     
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 3
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.text = "Enter description"
+            textView.textColor = UIColor.lightGray
+        }
     }
-    
-    // tell pickerView the name of account at "row" index
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return categories[row]
-    }
-    
-    // update the pickerView selection
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int){
-        current_selection = row
-    }
-    
 }
 
-class colorPicker: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource {
+class titleTextFields: UITextField, UITextFieldDelegate{
     
-    let colors = ["Blue", "Red", "Yellow"]
-    var selection = 0
-    
-    func getColor() -> String?{
-        return colors[selection]
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+
+        let currentCharacterCount = textField.text?.count ?? 0
+        if range.length + range.location > currentCharacterCount {
+            return false
+        }
+        let newLength = currentCharacterCount + string.count - range.length
+        return newLength <= 25
     }
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 3
-    }
-    
-    // tell pickerView the name of account at "row" index
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return colors[row]
-    }
-    
-    // update the pickerView selection
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int){
-        selection = row
-    }
-    
 }

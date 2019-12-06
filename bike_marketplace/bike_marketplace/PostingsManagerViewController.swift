@@ -119,7 +119,7 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
                         }
                         // After all images associated with the posting have been deleted, the posting doc is deleted from database
                         image_group.notify(queue: image_queue) {
-                            self.removeFromUserPostingsArrayThenUpdateView(db: db, postingID: postingID)
+                            self.removeFromUser(db: db, postingID: postingID)
                         }
                     } else {
                         print("Posting document does not exist")
@@ -130,7 +130,10 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
-    func removeFromUserPostingsArrayThenUpdateView(db: Firestore, postingID: String) {
+    /*
+     * Removes posting id's from user document
+     */
+    func removeFromUser(db: Firestore, postingID: String) {
         guard let uid = Auth.auth().currentUser?.uid else {
             print("error getting uid while removing postingID from user_postings")
             return
@@ -151,6 +154,9 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
+    /*
+     * Deletes a single image from FirebaseStorage
+     */
     func deleteImage(group: DispatchGroup, storage: StorageReference, imageID: String) {
         DispatchQueue.global(qos: .userInitiated).async {
             let imageRef = storage.child(imageID)
@@ -166,6 +172,9 @@ class PostingsManagerViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
+    /*
+     * Deletes a document from Firebase.
+     */
     func deleteDatabaseDoc(group: DispatchGroup, db: Firestore, collection: String, docID: String) {
         DispatchQueue.global(qos: .userInitiated).async {
             db.collection(collection).document(docID).delete() { error in

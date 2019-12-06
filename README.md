@@ -41,6 +41,10 @@ someone makes a new posting, the app invokes a
 preferences of the new postings. The Firebase function then makes a call on the
 Twilio API to send the text to users who might be interested in the bike.
 
+**Important note:** in order to receive texts, Twilio requires you to verify
+your number with our project because we currently have a trial account. Trying
+to trigger the magic experience with an unverified number will not work.
+
 ## Running the App
 
 Simply run the app through the workspace in the bike/marketplace directory.

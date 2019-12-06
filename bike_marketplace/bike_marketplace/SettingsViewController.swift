@@ -82,7 +82,7 @@ class SettingsViewController: UIViewController {
                 self.showWrongPasswordAlert()
                 self.enableUI()
             } else {
-                self.deleteUserThenTransition()
+                self.deleteUser()
             }
         }
 
@@ -100,12 +100,13 @@ class SettingsViewController: UIViewController {
     /*
      * Fetch user data, then delete related database entries.
      */
-    func deleteUserThenTransition() {
+    func deleteUser() {
         let user = Auth.auth().currentUser
         guard let uid = user?.uid else {
             print("error unwrapping uid while deleting user")
             return
         }
+        
         self.deleteUserData(uid: uid)
     }
     
@@ -127,20 +128,25 @@ class SettingsViewController: UIViewController {
 
             user.getDocument { (document, error) in
                 if let document = document, document.exists {
-                    // Delete all user's postings and image in each posting
                     let user_postings = document.get("user_postings")
                     
+                    // Delete all user's postings and images in each posting
                     for posting in user_postings as! [String] {
+                        
+                        // deletes all in a posting and posting itself
                         delete_group.enter()
                         self.deleteImagesAndPosting(delete_queue: delete_queue, delete_group: delete_group, db: db, storage: storage, postingID: posting)
                     }
+                    
+                    // delete user database document
                     delete_group.notify(queue: delete_queue) {
+                        
                         delete_group.enter()
                         self.deleteDatabaseDoc(group: delete_group, db: db, collection: "users", docID: uid)
                     }
                     // Once all docs associated with the user are deleted, we can delete the user from Authentication
                     delete_group.notify(queue: delete_queue) {
-                        self.deleteUser()
+                        self.deleteUserAuth()
                     }
                     
                 } else {
@@ -227,7 +233,7 @@ class SettingsViewController: UIViewController {
     /*
      * Deletes user by calling a Firebase Authentication function, transitions to login.
      */
-    func deleteUser() {
+    func deleteUserAuth() {
         let user = Auth.auth().currentUser
         user?.delete { error in
           if error != nil {
@@ -242,13 +248,11 @@ class SettingsViewController: UIViewController {
     func enableUI(){
         self.navigationController?.navigationBar.isUserInteractionEnabled = true
         self.mainView.isUserInteractionEnabled = true
-        //activityIndicator.isHidden = true
     }
     
     func disableUI(){
         self.navigationController?.navigationBar.isUserInteractionEnabled = false
         self.mainView.isUserInteractionEnabled = false
-        //activityIndicator.isHidden = false
     }
     
     /*
